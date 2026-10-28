@@ -1,0 +1,38 @@
+node_modules/
+dist/
+*.log
+.DS_Store
+
+# The BFF's record store and the documents the app writes back for you.
+.data/
+output/
+
+# A working tree's own engine home: dependency environments, sessions, state.
+.hermes-dev/
+/workspace/
+
+# Credentials and keys never belong in a repository.
+.env*
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+.npmrc
+.netrc
+auth.json*
+credentials*
+
+# A copy of a store, wherever it lands.
+*.bak
+*.sqlite
+*.db-wal
+*.db-shm
+
+# Python artefacts.
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+.venv/

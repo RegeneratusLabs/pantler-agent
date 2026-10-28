@@ -1,0 +1,92 @@
+# pantler — distribution manifest
+#
+# Installed with:  hermes profile install <this directory or repo> --name pantler
+# Verified against Hermes 297552a9d646119871391d202509822cd86330df (v0.22.1, channel stable).
+# The engine pin is engine-pin.json; this comment tracks it (the engine-update notes).
+#
+# Only `name` is required by the engine. `distribution_owned` is declared explicitly
+# rather than omitted: the engine's documented default (DEFAULT_DIST_OWNED) is dead
+# code in this build, and omitting the key makes the engine claim the *entire* payload
+# instead — see profile_distribution.py:343-353.
+
+name: pantler
+version: 0.0.1
+description: pantler — the personal assistant harness for a small food business, run conversationally.
+author: pantler
+license: MIT
+# The floor tracks the pin: we are verified at 0.22.1 and the dev engine, the operator's
+# Hermes and the shipped artifact are all that commit (the engine-update notes).
+hermes_requires: ">=0.22.1"
+
+# Files this distribution owns, relative to the profile root. On `hermes profile update`
+# these are replaced; everything else in the operator's home is theirs and is never touched.
+#
+# Declare only paths the pack actually ships: a declared path that is absent is skipped
+# silently (`_owned_entries` yields only `if src.exists()`), so listing a file we do not
+# carry claims ownership of nothing. The operator's config.yaml is theirs and is preserved
+# on update regardless (`_copy_dist_payload`, preserve_config). Add each back when the pack
+# ships a default.
+#
+# The skill directories are named **individually** rather than as `skills`. `skills` is a
+# container the engine merges per authored root, but a directory that contains a SKILL.md is
+# a root, and a root is replaced whole (profile_distribution.py:450-475). So `skills` as one
+# entry would mean `hermes profile update` owns the operator's own skills and the ones the
+# assistant wrote for itself — and would silently revert an edit the operator asked for. Naming
+# every skill directory we ship makes the engine own exactly those and nothing else
+# (the skills and plugins notes §9.3).
+distribution_owned:
+  - SOUL.md
+  # The operator's own settings file, copied once at install and preserved on every update
+  # (`_copy_dist_payload`, preserve_config). It carries the enabled plugins and
+  # `approvals.mode: manual` — the two defaults a fresh install must not get wrong — and
+  # deliberately no `agent.disabled_toolsets`, so the toolset surface is the operator's to switch.
+  - config.yaml
+  # The marker that stops the engine seeding its own bundled skills into this profile
+  # (`tools/skills_sync.sync_skills` reads it and seeds only ESSENTIAL_SKILLS). It ships as a
+  # file because the distribution payload is the only surface that can carry it: the installer
+  # does not write it, and no manifest field asks for it (profile_distribution.install_distribution).
+  # Without it, a fresh pantler install carries the engine's general-purpose skills — apple,
+  # social-media, songwriting — on a food business's machine.
+  - .no-bundled-skills
+  # The workspace operating guide. `AGENTS.md` is discovered from the session's working
+  # directory, not from HERMES_HOME (the engine notes §4.3), so it only reaches the prompt
+  # when the profile's `terminal.cwd` is the workspace it ships in. This copy is the product's
+  # seed and is replaced on update; an operator's own additions belong in `AGENTS.override.md`
+  # beside it, which the engine loads instead of this file, or in the workspace they point the
+  # profile at (the agent-files notes).
+  - workspace/AGENTS.md
+  - skills/invoicing
+  - skills/soil-amendment-engine
+  - skills/speech-to-lines
+  - skills/cite-or-refuse
+  - skills/spray-records
+  - skills/organic-certification
+  - skills/eudr-due-diligence
+  - skills/packaging-and-epr
+  - skills/labelling-honey-and-juices
+  - skills/sustainability-reporting
+  - skills/harvest-and-lots
+  - skills/records-retention
+  - skills/social-post-batch
+  - skills/product-description
+  - skills/campaign-calendar
+  - skills/newsletter-issue
+  - skills/brand-voice-guide
+  - skills/reviews-and-testimonials
+  - skills/availability-list
+  - skills/documents
+  - skills/design
+  # The packs — the record types every screen and every record tool is validated against. Three
+  # shipped plugins resolve `packs_dir` and refuse without it, so a payload that omits this ships
+  # eight skills whose tools cannot run: `record_save`, `record_find`, `consent_check` and the
+  # typed half of `spray_record` (the internal audit DIST-1). They land at
+  # `<profile>/packs/`, which is where the plugins look when nothing is configured.
+  # `distribution/packs/` is generated from `packs/` and asserted byte-identical.
+  - packs
+  # The first-party plugins: how a pack reaches the engine, and where the product's own tools
+  # live. Without this the payload carries no tools at all — a fresh install was verified to
+  # produce no plugins/ directory, leaving `invoice_create` and the soil engine absent and their
+  # skills describing work nothing could do. The copies under `distribution/plugins/` are
+  # generated from `plugins/` and asserted byte-identical by scripts/check-distribution.py
+  # (`--sync-plugins` rewrites them), because two hand-maintained copies of one plugin would drift.
+  - plugins

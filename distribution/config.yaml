@@ -1,0 +1,117 @@
+# pantler — the defaults a fresh install starts from
+#
+# This file is copied once, at `hermes profile install`. After that it is the operator's:
+# `hermes profile update` preserves `config.yaml` unless `--force-config` is passed
+# (the engine-update notes), so nothing here can reach back and change a setting they chose.
+#
+# **The toolset surface is not suppressed here, and that is deliberate (changed 2026-10-19).**
+# This file used to ship `agent.disabled_toolsets` naming seven toolsets — `browser`, `terminal`,
+# `code_execution`, `computer_use`, `image_gen`, `delegation` and `connections` — on the argument
+# that a food business has no use for them. The argument did not survive contact with the work the
+# assistant is already asked to do. `design`, a skill this product publishes, renders a card
+# with a shell and Python; with `terminal`, `code_execution` and `browser`
+# suppressed the skill loaded, planned the render, and had no way to execute it — the operator
+# asked for an image and got an apology (session `web-e39346258860`, 2026-10-19). A capability the
+# product cannot honour is worse than one it never offered, and the fix is the surface rather than
+# a smaller promise: a fresh install is not narrowed by this file, whatever the engine's own
+# platform default loads is on, and turning one off is the operator's decision taken on their own
+# machine rather than a default they never saw.
+#
+# One piece of the surface is not gated by anything: the write half of `file` (`patch`,
+# `write_file`) and `skill_manage` can rewrite the profile's `SOUL.md` or any `SKILL.md`, and the
+# engine's write guards protect neither (the profile home is excluded from
+# `tools/file_tools_write_guards.py`, and `tools/skill_manager_guards.py` pins only
+# `ESSENTIAL_SKILLS`). A first-party `pre_tool_call` hook refusing those writes is owed and cannot
+# be shipped from this file; until it lands the rule lives in `SOUL.md`, which the operator can
+# read (the internal security audit A19-DIST-2). With the suppress list gone that hook is the
+# remaining gap between "the operator can switch it off" and "the operator is asked first".
+#
+# The surface is measured rather than restated here: the status page carries the current counts
+# and `baseline/pantler-toolsets.json` is the capture of the live `GET /v1/toolsets`, which
+# `scripts/toolset-check.py` fails against when it drifts. This file suppresses nothing, but the
+# engine's own platform default still withholds some toolsets — `video` among them, because no
+# video model is configured and the composer attaches images only.
+#
+# `platform_toolsets.api_server` adds the one toolset the engine's API-server default omits that
+# this app can answer: `clarify`. Naming the composite (`hermes-api-server`) keeps the default
+# surface — and whatever the engine adds to it next — instead of freezing an enumerated list;
+# `clarify` is the addition. The Capabilities screen writes `agent.disabled_toolsets`, which the
+# engine applies last, so the switch still turns the toolset off and back on.
+# (The three numbers this comment used to carry — "11 toolsets and 19 tools, against 16 and 73
+# before" — mixed an enabled-toolset count with a total-tool count, so none of them was checkable;
+# the internal audit DIST-8. "16 of the engine's 34 toolsets" then called the API's list the
+# engine's own and hid the 7 plugins inside it; the internal security audit A19-DIST-9.)
+
+# `manual`, never a bare `off`. YAML 1.1 parses an unquoted `off` as the boolean false, and the
+# engine maps `False` to "off" silently — approvals would then be disabled with no error
+# anywhere (the internal backend audit §2.1). Writing the string `manual` is the fix, and it is the
+# value the distribution is supposed to pin.
+# `plugins.enabled` is an opt-in allow-list: the engine loads a user plugin only when this list
+# names it (`plugins_discovery._get_enabled_plugins`), so shipping a plugin without this line is
+# shipping files that never run. All of ours are first-party and always on; a capability switch
+# is what turns one off, not an absent default.
+plugins:
+  enabled:
+    - pantler
+    - soil-amendment
+    - spray
+    - records
+    - availability
+    - claims
+    - consent
+    - connectors
+
+approvals:
+  mode: manual
+
+# See the note above: the API-server composite plus the one toolset it omits that this app can
+# answer. The composite is named deliberately — an enumerated list would drop whatever the engine
+# adds next.
+platform_toolsets:
+  api_server:
+    - hermes-api-server
+    - clarify
+
+# Script execution the assistant needs for the work its own skills prescribe: `design` renders a
+# card through `scripts/render_card.py` and may use a heredoc (`python <<'PY' … PY`), so without
+# this entry the command is gated — and on the API-server surface the run parks with no card to
+# answer it, which is how the operator asks for an image and gets nothing (session
+# `web-e39346258860`, 2026-10-19). This is a standing approval for *script execution only*;
+# everything else still reaches the human gate.
+command_allowlist:
+  - script execution via -e/-c flag
+  - script execution via heredoc
+
+# Hermes allows exactly one gateway per host, so a named profile has to say it wants one of its
+# own or `hermes -p pantler gateway run` is refused — and that is the launch the app documents
+# (app/README.md), and the only thing the BFF can talk to. The dev profile has always carried
+# this; the shipped one did not, so a fresh install could not start
+# (the internal audit DIST-3). The engine warns that the shim will be removed; when it is,
+# the replacement is `hermes -p pantler gateway install --force` (the developer setup notes).
+gateway:
+  standalone: true
+
+# The engine's stock `api_server` hint says the rendering layer is unknown, that non-image files
+# are not intercepted anywhere, and that a MEDIA: tag on the runs endpoint prints as literal
+# text exposing a raw host path. That was true of the engine's own surfaces and it is not true
+# of this app: pantler renders the runs surface itself and intercepts the directive
+# (`app/web/src/components/media.ts`). Left in place, the model followed the hint and refused to
+# hand files over on a surface that shows them (observed live, 2026-10-19).
+#
+# `replace`, not `append`: appending a correction under the sentence it contradicts leaves the
+# model two answers, and the earlier absolute one is the one it quoted. The stock hint's
+# file-delivery sentence is replaced with what this surface actually does, and its plain-text
+# sentence is replaced because it is no longer true: the shell renders markdown
+# (`app/web/src/components/Markdown.tsx`), and the app also sends the formatting instruction on
+# every turn (`onboarding/personalities.ts` `turnInstructions`).
+platform_hints:
+  api_server:
+    replace: >
+      You're responding through pantler's own chat window, which renders markdown — headings,
+      lists, tables, code and links. Use it when it makes the answer easier to scan. Use
+      markdown rather than HTML; raw HTML is shown as text. Keep responses brief and natural.
+
+      File delivery: write MEDIA:/absolute/path on a line of its own. Images (.png/.jpg/.jpeg/
+      .gif/.webp/.bmp, up to 5MB) render inline in the conversation with a Download action; any
+      other file — a PDF, an HTML page, a CSV, a text file — renders as a card the operator can
+      open. Do not paste a bare path and tell them to go and find it.

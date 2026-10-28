@@ -1,0 +1,35 @@
+{
+  "_note": "Fictitious demo data. The withholding periods and label maxima are illustrative and NOT a claim about any product — the operator enters what their own label says.",
+  "blocks": [
+    { "id": "BLK-001", "name": "North block", "area_ha": 3.5, "certified": "organic", "aliases": ["north", "the north"] },
+    { "id": "BLK-002", "name": "Bottom paddock", "area_ha": 8, "certified": "in conversion", "aliases": ["bottom"] }
+  ],
+  "inputs": [
+    {
+      "id": "INP-001",
+      "name": "Copper oxychloride 500",
+      "unit": "kg",
+      "withholding_days": 1,
+      "re_entry_hours": 24,
+      "registration": "APVMA 12345 (label on file)",
+      "max_rate": 3,
+      "max_rate_unit": "kg/ha",
+      "aliases": ["copper", "copper oxychloride"]
+    },
+    {
+      "id": "INP-002",
+      "name": "Wettable sulphur",
+      "unit": "kg",
+      "registration": "APVMA 54321",
+      "max_rate": 5,
+      "max_rate_unit": "kg/ha",
+      "aliases": ["sulphur", "sulfur"]
+    },
+    {
+      "id": "INP-003",
+      "name": "Fish emulsion",
+      "unit": "L",
+      "aliases": ["fish"]
+    }
+  ]
+}

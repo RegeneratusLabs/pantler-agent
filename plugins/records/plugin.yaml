@@ -1,0 +1,37 @@
+name: records
+version: 0.1.0
+manifest_version: 2
+api_version: 1
+author: pantler
+license: MIT
+requires_hermes: ">=0.22.1"
+description: >-
+  Read and write the operator's own records — certificates, spray applications, blocks,
+  harvests — through the kernel's record store, validated against the pack that declares
+  them. The model extracts what the operator said; this tool decides whether it is a record.
+tags: [records, certificates, compliance, store]
+provides_tools:
+  - record_save
+  - record_find
+  - record_types
+  - record_type_propose
+  - record_type_create
+config_schema:
+  store_path:
+    type: str
+    default: ""
+    description: >-
+      Path to the records database the app reads. Defaults to records.db in HERMES_HOME, or
+      PANTLER_STORE in the environment.
+  packs_dir:
+    type: str
+    default: ""
+    description: >-
+      Directory holding the installed packs. Defaults to PANTLER_PACKS, or packs/ beside
+      HERMES_HOME.
+  custom_packs_dir:
+    type: str
+    default: ""
+    description: >-
+      Directory holding the operator's own record types, outside the distribution-owned packs/.
+      Defaults to custom-packs/ beside the profile, or PANTLER_CUSTOM_PACKS.

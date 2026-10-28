@@ -1,0 +1,42 @@
+Client Sample ID:,,,,Whole Paddock
+Sample Depth:,,,,
+Sample Date:,,,,2 Feb 2026
+Your Client:,,,,EXAMPLE FARM
+Method Reference,Parameter,Unit,LOR,E26-00-8888-0001
+** Inhouse S37,Nitrate-N - KCl extractable,mg/kg,<0.1,3.6
+** Inhouse S37,Ammonium-N - KCl extractable,mg/kg,<0.1,2.3
+** Inhouse S37,Sulfur - KCl extractable,mg/kg,<1,26
+** Rayment & Lyons 18F1,Mehlich Phosphorus,mg/kg,<0.1,9.7
+Rayment & Lyons 4A1,pH (H2O),units,---,6.98
+Rayment & Lyons 3A1,Electrical Conductivity,dS/m,<0.005,0.110
+** Rayment & Lyons 18F1,Exchangeable Calcium,cmol+/kg,<0.05,9.48
+** Rayment & Lyons 18F1,Exchangeable Calcium,kg/ha,<22,4260
+** Rayment & Lyons 18F1,Exchangeable Calcium,mg/kg,<10,1900
+** Rayment & Lyons 18F1,Exchangeable Magnesium,cmol+/kg,<0.01,7.29
+** Rayment & Lyons 18F1,Exchangeable Magnesium,kg/ha,<2,1990
+** Rayment & Lyons 18F1,Exchangeable Magnesium,mg/kg,<1,887
+** Rayment & Lyons 18F1,Exchangeable Potassium,cmol+/kg,<0.12,0.18
+** Rayment & Lyons 18F1,Exchangeable Potassium,kg/ha,<112,160
+** Rayment & Lyons 18F1,Exchangeable Potassium,mg/kg,<50,71.6
+** Rayment & Lyons 18F1,Exchangeable Sodium,cmol+/kg,<0.065,0.72
+** Rayment & Lyons 18F1,Exchangeable Sodium,kg/ha,<33,372
+** Rayment & Lyons 18F1,Exchangeable Sodium,mg/kg,<15,166
+** Inhouse S37,Aluminium - Exchangeable,cmol+/kg,---,0.03
+** Calculation,Calcium,%,<0.01,53
+** Calculation,Magnesium,%,<0.01,41
+** Calculation,Potassium,%,<0.01,1.0
+** Calculation,Sodium - ESP,%,<0.01,4.0
+** Calculation,Hydrogen,%,---,1.5
+** Calculation,Total Cation Exchange Capacity,cmol+/kg,---,18.0
+Rayment & Lyons 12A1,Zinc - DTPA,mg/kg,<0.5,1.3
+Rayment & Lyons 12A1,Manganese - DTPA,mg/kg,<0.1,25.3
+Rayment & Lyons 12A1,Iron - DTPA,mg/kg,<0.5,29.0
+Rayment & Lyons 12A1,Copper - DTPA,mg/kg,<0.1,3.3
+** Rayment & Lyons 12C2,Boron - CaCl2 extractable,mg/kg,<0.1,< 0.1
+** Inhouse S11,Silicon - CaCl2 extractable,mg/kg,<1,67
+Inhouse S4a,Carbon - Total,%,<0.02,1.6
+Inhouse S4a,Nitrogen - Total,%,<0.02,0.13
+Inhouse S4a,Estimated Organic Matter,%,<0.04,2.8
+** Paramagnetic Count Soil Meter,Paramagnetism,uCGS,---,140
+** Inhouse S65,Basic Texture,---,---,---
+** Inhouse S65,Basic Colour,---,---,Pale

@@ -1,0 +1,184 @@
+{
+  "name": "default",
+  "label": "Default agronomic profile",
+  "version": "1.0",
+
+  "branding": {
+    "report_title": "Soil amendment recommendation",
+    "report_subtitle": "Draft for agronomist review",
+    "prepared_by": "",
+    "disclaimer": "This is a draft calculation, not advice. Amendment rates are the calculated soil requirement, capped at the maximum annual application for each product; they are not an application schedule. No control can be exercised over storage, handling, mixing, application, weather, or soil and plant conditions before, during or after application. Application timing, product selection, and the decision to apply at all remain the responsibility of a qualified agronomist and the grower."
+  },
+
+  "thresholds": {
+    "ph_use_gypsum_above": 7.0,
+    "ca_bs_crowded": 80.0,
+    "tec_bs_irrelevant_below": 5.0,
+    "typical_depth_min_cm": 5.0,
+    "typical_depth_max_cm": 30.0,
+    "organic_matter_min_pct": 4.0,
+    "organic_carbon_min_pct": 2.0,
+    "paramagnetism_min": 200.0,
+    "ec_salinity_threshold": 0.6,
+    "nh4_no3_min_ratio": 0.5,
+    "ratio_tolerance": 0.20,
+    "ppm_zn_ratio_ideal": 10.0,
+    "fe_mn_ratio_ideal": 1.1,
+    "k_na_ratio_ideal": 5.0
+  },
+
+  "bulk_density_by_texture": {
+    "sand": 1.65,
+    "loamy sand": 1.60,
+    "sandy loam": 1.55,
+    "sandy soil": 1.55,
+    "sandy clay loam": 1.50,
+    "loam": 1.50,
+    "silt loam": 1.50,
+    "silty loam": 1.50,
+    "silt": 1.50,
+    "silty clay loam": 1.50,
+    "clay loam": 1.45,
+    "silty clay": 1.45,
+    "sandy clay": 1.40,
+    "clay": 1.35,
+    "clayey": 1.35
+  },
+  "default_bulk_density": 1.50,
+  "default_depth_cm": 15.0,
+  "approximate_textures": ["sandy soil"],
+
+  "ideal_ppm": {
+    "P": 70.0,
+    "S": 50.0,
+    "B": 2.0,
+    "Fe": 100.0,
+    "Mn": 70.0,
+    "Cu": 7.5,
+    "Zn": 9.0,
+    "Mo": 0.7,
+    "Co": 0.3,
+    "NO3_N": 20.0,
+    "NH4_N": 20.0,
+    "Si": 100.0
+  },
+
+  "base_saturation_by_tec": [
+    {"tec_min": 1.0,  "tec_max": 3.0,   "ca_mg_label": "3:1",   "elements": {"Ca": [null, 60.0], "Mg": [null, 20.0], "K": [5.0, 7.0], "Na": [0.5, 1.5]}},
+    {"tec_min": 3.0,  "tec_max": 5.0,   "ca_mg_label": "3.4:1", "elements": {"Ca": [null, 62.0], "Mg": [null, 18.0], "K": [5.0, 7.0], "Na": [0.5, 1.5]}},
+    {"tec_min": 5.0,  "tec_max": 7.0,   "ca_mg_label": "4:1",   "elements": {"Ca": [null, 64.0], "Mg": [null, 16.0], "K": [4.0, 5.0], "Na": [0.5, 1.5]}},
+    {"tec_min": 7.0,  "tec_max": 9.0,   "ca_mg_label": "4.3:1", "elements": {"Ca": [null, 65.0], "Mg": [null, 15.0], "K": [3.5, 5.0], "Na": [0.5, 1.5]}},
+    {"tec_min": 9.0,  "tec_max": 11.0,  "ca_mg_label": "5.2:1", "elements": {"Ca": [null, 67.0], "Mg": [null, 13.0], "K": [3.0, 5.0], "Na": [0.5, 1.5]}},
+    {"tec_min": 11.0, "tec_max": 30.0,  "ca_mg_label": "5.7:1", "elements": {"Ca": [null, 68.0], "Mg": [null, 12.0], "K": [3.0, 5.0], "Na": [0.5, 1.5]}},
+    {"tec_min": 30.0, "tec_max": null,  "ca_mg_label": "7:1",   "elements": {"Ca": [null, 70.0], "Mg": [null, 10.0], "K": [2.0, 5.0], "Na": [0.5, 1.5]}}
+  ],
+
+  "high_k_tec_overrides": {
+    "1.0": [5.0, 7.0], "3.0": [5.0, 7.0], "5.0": [4.0, 7.0], "7.0": [4.0, 7.0],
+    "9.0": [4.0, 7.0], "11.0": [4.0, 7.0], "30.0": [3.0, 6.0]
+  },
+
+  "max_kg_ha_yr": {
+    "Soft rock phosphate": [9.0, 1500.0],
+    "MAP": [22.0, 300.0],
+    "DAP": [20.0, 300.0],
+    "Single superphosphate": [9.0, 300.0],
+    "Magnesite": [27.0, 1500.0],
+    "Dolomite": [10.0, 2000.0],
+    "Magnesium oxide": [53.0, 300.0],
+    "Lime (fine)": [40.0, 4500.0],
+    "Gypsum": [20.0, 2000.0],
+    "Ammonium sulfate": [21.0, 300.0],
+    "Potassium sulfate": [42.0, 300.0],
+    "Potassium nitrate": [39.0, 250.0],
+    "Potassium chloride": [50.0, 100.0],
+    "Elemental sulfur": [90.0, 60.0],
+    "Boric acid granules": [17.5, 15.0],
+    "Borax": [14.0, 15.0],
+    "Boron granules": [3.0, 30.0],
+    "Manganese sulfate": [31.0, 30.0],
+    "Copper sulfate": [25.0, 15.0],
+    "Zinc sulfate monohydrate": [34.0, 25.0],
+    "Zinc sulfate heptahydrate": [22.0, 3.0],
+    "Sodium molybdate": [39.0, 0.2],
+    "Cobalt sulfate": [21.0, 0.2]
+  },
+  "max_ca_ppm_per_year": 800.0,
+
+  "product_selections": {
+    "phosphorus": {
+      "with_calcium_need":  {"product": "Soft rock phosphate", "element_pct": 9.0,  "ca_pct": 20.0,
+                             "note": "Calcium is also required, so a combined phosphorus and calcium source is preferred; it builds both together."},
+      "without_calcium":    {"product": "MAP", "element_pct": 22.0,
+                             "note": "Calcium is not required, so a fast-release phosphorus source is appropriate. Stabilise it with a carbon or humate source - fast-release phosphate reacts with soil cations and locks up within 6-12 weeks."}
+    },
+    "magnesium": {
+      "with_calcium_need":  {"product": "Dolomite", "element_pct": 10.0, "ca_pct": 20.0,
+                             "note": "Calcium is also required, so a combined magnesium and calcium source is appropriate."},
+      "without_calcium":    {"product": "Magnesite", "element_pct": 27.0,
+                             "note": "Magnesite is the higher-analysis magnesium source. Magnesium inputs are strongly alkalising - check pH before applying."}
+    },
+    "calcium": {
+      "low_ph":  {"product": "Lime (fine)", "element_pct": 40.0,
+                  "note": "Fine lime is the highest-analysis, easiest to source calcium input where pH allows a rise. Target pH around 6.3."},
+      "high_ph": {"product": "Gypsum", "element_pct": 20.0, "s_pct": 15.0,
+                  "note": "pH is already alkaline, so gypsum supplies calcium without raising it further. With adequate moisture and drainage it also helps displace excess magnesium and sodium, and it supplies sulfur."}
+    },
+    "potassium": {"product": "Potassium sulfate", "element_pct": 42.0,
+                  "note": "Sulfate of potash is preferred over potassium chloride: the chloride is detrimental to soil biology and the sulfate is useful."},
+    "nitrogen":  {"product": "Ammonium sulfate", "element_pct": 21.0, "s_pct": 24.0,
+                  "note": "Nitrogen is volatile and mobile; supply it in small frequent doses with a carbon source rather than one large application."},
+    "sulfur":    {"product": "Gypsum", "element_pct": 15.0, "ca_pct": 20.0,
+                  "note": "Sulfur is the most leachable element and is commonly deficient. It is also held in soil organic matter, so building organic matter is the durable fix."},
+    "trace": {
+      "B":  {"product": "Borax", "element_pct": 14.0,
+             "note": "Trace elements are rarely economic to blend and broadcast. Liquid application is usually more efficient and more precise; this is the soil requirement, not necessarily the recommended application."},
+      "Zn": {"product": "Zinc sulfate monohydrate", "element_pct": 34.0, "note": ""},
+      "Mn": {"product": "Manganese sulfate", "element_pct": 31.0,
+             "note": "Manganese is best applied to the soil at up to 30 kg/ha/yr; the full soil requirement will take more than one season."},
+      "Cu": {"product": "Copper sulfate", "element_pct": 25.0, "note": ""},
+      "Mo": {"product": "Sodium molybdate", "element_pct": 39.0, "note": ""},
+      "Co": {"product": "Cobalt sulfate", "element_pct": 21.0, "note": ""}
+    }
+  },
+
+  "messages": {
+    "codes": {
+      "ca_low_base_saturation": "Calcium is below the target for this cation exchange capacity and should be the first priority in the program.",
+      "ca_excess_crowding": "Calcium base saturation is above roughly 80%, where excess calcium begins to reduce the availability of potassium, iron, boron, zinc, manganese, copper and magnesium. Prioritise magnesium and organic matter over further calcium.",
+      "ca_annual_ceiling": "Total calcium required exceeds the annual ceiling across all forms. Apply what the ceiling allows this season and build the remainder over subsequent seasons.",
+      "ca_max_rate": "The calcium source requirement exceeds the maximum annual application rate. Split it across seasons.",
+      "ca_netted": "Calcium contributed by the phosphorus and magnesium inputs in earlier steps has been deducted from this requirement.",
+      "ca_deferred": "Part of the calcium requirement is deferred to future seasons because the total exceeds what may be applied in one year.",
+      "mg_excess": "Magnesium exceeds the ideal for this cation exchange capacity. High magnesium tightens soil structure, reduces oxygen in the root zone, and increases the nitrogen requirement.",
+      "mg_excess_with_low_ca": "Magnesium is above the ideal while calcium is below it. Adding calcium will displace some magnesium from the exchange complex; build some magnesium into the program to compensate.",
+      "mg_alkalising": "Magnesium has roughly 1.4 times the pH influence of calcium, so adding it to an already alkaline soil may raise pH further.",
+      "mg_deficit_needs_ph_check": "Magnesium is deficient but the soil is already alkaline. Magnesium sources are strongly alkalising; check pH before choosing one.",
+      "k_colloid_crowded": "The exchange complex is crowded with calcium and magnesium, so soil-applied potassium cannot readily displace them - potassium has the weaker charge. Address the deficit through a combination of soil application, foliar supply, and microbial release rather than broadcasting the full rate.",
+      "k_split_across_seasons": "The full potassium deficit is far above the maximum annual application rate. Split it across seasons and fertilise to plant requirement rather than broadcasting the full rate.",
+      "k_na_inverted": "Sodium exceeds potassium. When that happens plants take up sodium in preference to potassium, which harms water use efficiency and crop quality. A sodium management program is indicated.",
+      "p_zn_ratio_high": "Phosphorus is high relative to zinc. With high phosphorus, zinc should be held at luxury levels to compensate, because high phosphorus restricts zinc availability.",
+      "p_zn_ratio_low": "Zinc is high relative to phosphorus. Check iron and phosphorus availability.",
+      "fe_mn_inverted": "Iron is not higher than manganese. Both are most available when iron is marginally higher; with the ratio inverted, manganese can restrict iron. Consider a chelated iron supplement.",
+      "ca_mg_ratio_low": "The calcium to magnesium ratio is below target. This ratio is the single strongest influence on nutrient availability, soil structure and root-zone oxygen.",
+      "ca_mg_ratio_high": "Calcium is high relative to magnesium for this cation exchange capacity. Check that the exchange complex is not overcrowded with calcium.",
+      "ammonium_nitrate_imbalance": "The ammonium to nitrate ratio is low, which points to an imbalance in the soil foodweb rather than a simple nitrogen deficit - typically a low fungal to bacterial ratio, and often compacted or pathogen-prone soil. A fungal-dominant microbial inoculum helps restore the balance. Note that tree crops prefer ammonium to nitrate.",
+      "tec_below_5": "Total exchange capacity is below 5, where base saturation percentages are not meaningful. Work to minimum levels of each element to ensure structure and growth rather than to saturation targets.",
+      "organic_matter_low": "Organic matter is below the ~4% level associated with optimum soil-life activity. Organic matter is a continuing focus, not a one-off input - it drives nutrient cycling, water retention and drought tolerance.",
+      "organic_carbon_very_low": "Organic carbon is below {min}%, where soil-life activity and fertility are limited.",
+      "paramagnetism_low": "The paramagnetic reading is low. A highly paramagnetic material (check local sources of crusher dust) can improve fertility and help sustain the soil foodweb.",
+      "salinity_check": "Electrical conductivity is elevated. Check for salinity and identify the source - irrigation water is common.",
+      "depth_atypical": "Sample depth is {depth} cm, outside the typical {min}-{max} cm working layer. The kg/ha factor ({factor}) is arithmetically correct for that depth, but these rates describe the whole sampled layer. Confirm the sample represents the layer actually being amended before using the rates as an application schedule.",
+      "depth_unit_inferred": "The sampling depth was given as '{raw}' with no cm or mm unit and has been interpreted as {depth} cm from the magnitude. Worth confirming against the sampling instructions.",
+      "density_defaulted": "No usable texture on the report, so bulk density defaulted to {bd} t/m3. Supply a measured bulk density for this paddock if the rate matters.",
+      "legume_omit_n": "Nitrogen is low but the crop is a legume. Added nitrogen can reduce the legume's own fixation - omit it unless there is a specific reason.",
+      "copper_history": "Copper is low, but copper fungicide applications are in use, so there is no risk of a copper deficiency. Omit the copper input.",
+      "reserve_only": "This element is reported only as a total acid-extractable reserve, which is not comparable with an available-test target. An available test is required to judge a deficiency, so no deficit has been calculated.",
+      "silicon_no_product": "Silicon is deficient but no product entry is configured for it, so no rate can be calculated. Silicon is usually supplied as an amendment rather than a soluble salt.",
+      "certification_check": "Certified organic or biodynamic production. Exclude any uncertified input and confirm every product against the applicable standard before it goes in the program.",
+      "equipment_constraint": "Foliar equipment cannot handle wettable powders. Liquid formulations must be used, and suspension products will not be applicable.",
+      "budget_option": "Consider supplying two programs: an ideal program as the guideline and a budget program that is more likely to be viable this season.",
+      "ordering": "Inputs are calculated in the order phosphorus, magnesium, calcium, then nitrogen, potassium and sulfur, then trace elements. Calcium is netted off against calcium supplied by the phosphorus and magnesium inputs before a separate calcium source is considered."
+    }
+  }
+}

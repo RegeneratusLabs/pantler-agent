@@ -1,0 +1,88 @@
+/* pantler — brand tokens
+   Mirrors tokens/brand-tokens.json. Drop this into the app's global stylesheet
+   (or import it) and use the custom properties; do not hardcode hexes in components. */
+
+:root {
+  /* colour */
+  --pl-ink:    #1B2420;
+  --pl-cream:  #F7EFDF;
+  --pl-paper:  #F8F1E2;
+  --pl-sand:   #EDE3D0;
+  --pl-wheat:  #C9922E;
+  --pl-crust:  #9C4F27;
+
+  /* type */
+  --pl-font-display: 'Pantler Soft', Georgia, 'Times New Roman', serif;
+  --pl-font-display-sm: 'Pantler Soft Small', Georgia, serif;
+  --pl-font-ui: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --pl-caption: 12px;
+  --pl-body-s: 14px;
+  --pl-body: 16px;
+  --pl-body-l: 18px;
+  --pl-h4: 22px;
+  --pl-h3: 28px;
+  --pl-h2: 36px;
+  --pl-h1: 48px;
+  --pl-display: 64px;
+  --pl-display-xl: 96px;
+
+  --pl-tracking-display: -0.012em;
+  --pl-tracking-display-sm: -0.008em;
+  --pl-tracking-label: 0.26em;
+
+  /* space + shape */
+  --pl-space-1: 4px;  --pl-space-2: 8px;  --pl-space-3: 12px;
+  --pl-space-4: 16px; --pl-space-5: 24px; --pl-space-6: 32px;
+  --pl-space-7: 48px; --pl-space-8: 64px; --pl-space-9: 96px;
+  --pl-radius-sm: 6px; --pl-radius-md: 10px; --pl-radius-lg: 16px;
+  --pl-radius-pill: 999px;
+
+  /* motion */
+  --pl-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --pl-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --pl-dur-micro: 120ms;
+  --pl-dur-base: 200ms;
+  --pl-dur-entrance: 320ms;
+  --pl-dur-celebration: 600ms;
+}
+
+/* ---- base type roles ---- */
+.pl-display {
+  font-family: var(--pl-font-display);
+  font-weight: 400;              /* the instance IS weight 500; the file reports 400 */
+  letter-spacing: var(--pl-tracking-display);
+  line-height: 0.92;
+  color: var(--pl-ink);
+}
+
+.pl-heading {
+  font-family: var(--pl-font-display);
+  letter-spacing: var(--pl-tracking-display);
+  line-height: 1.15;
+  font-size: var(--pl-h3);
+}
+
+.pl-heading-sm {
+  font-family: var(--pl-font-display-sm);
+  letter-spacing: var(--pl-tracking-display-sm);
+  line-height: 1.2;
+  font-size: var(--pl-h4);
+}
+
+.pl-body {
+  font-family: var(--pl-font-ui);
+  font-size: var(--pl-body);
+  line-height: 1.55;
+  color: var(--pl-ink);
+}
+
+.pl-label {
+  font-family: var(--pl-font-ui);
+  font-weight: 600;
+  font-size: var(--pl-caption);
+  letter-spacing: var(--pl-tracking-label);
+  text-transform: uppercase;
+}
+
+/* never set paragraphs in the display face; it is a headline voice only */

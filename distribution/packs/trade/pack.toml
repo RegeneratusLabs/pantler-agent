@@ -1,0 +1,152 @@
+# The trade pack — selling itself.
+#
+# Everything a small business does regardless of what it makes: the marketing, the customer
+# communication, the permission that has to exist before either. The plan proposed this pack by name
+# and id (the internal capability plan §6) because the work has its own
+# records and its own screens, and because a new pack must need no engine, core or shell change —
+# which is exactly what adding this file tested.
+#
+# Two records to start with, and they are here for one reason: **two shipped skills asked for them.**
+# `reviews-and-testimonials` says in as many words that no consent record type exists and that filing
+# one in a `notes` field would be inventing storage; `campaign-calendar` says no pack holds a
+# campaign. A skill that names a missing record and then works around it is worse than one that never
+# mentioned it, so the records land before the skills are re-promoted.
+#
+# What is deliberately *not* here: an availability record. The availability list is a weekly,
+# disposable, customer-facing **document** — the prior art is emphatic that it is not a quotation, and
+# it is not obviously something to keep forever either. Whether the operator wants last week's list
+# retrievable is a question about their business, not a field shape, and inventing a `lines` longtext
+# to hold structured rows would be exactly the sort of pretend-record the reviews skill refuses. The
+# tool produces the document; if the answer is "keep them", the record type follows that answer.
+
+id = "trade"
+name = "Trade"
+version = "0.1.0"
+description = "Selling it: what the business says, to whom, and the permission to say it."
+
+[[records]]
+type = "consent"
+label = "Consent"
+plural = "Consents"
+title_field = "who"
+id_prefix = "CON"
+id_sequence = true
+
+  [[records.fields]]
+  name = "who"
+  label = "Who agreed"
+  kind = "text"
+  required = true
+  help = "The person, spelled the way they spell it. Initials only if that is all they gave."
+
+  [[records.fields]]
+  name = "what"
+  label = "What they agreed to"
+  kind = "longtext"
+  required = true
+  help = "Exactly. Their words, quoted, and for a photograph describe it specifically enough that a second photo is not covered by this record."
+
+  [[records.fields]]
+  name = "where_used"
+  label = "Where it may be used"
+  kind = "text"
+  required = true
+  help = "The one place they named — the website, the newsletter, the stall board. A consent for one place is not a consent for all of them."
+
+  [[records.fields]]
+  name = "shortening"
+  label = "Approved shortening"
+  kind = "text"
+  help = "If they agreed to a trimmed version, the trimmed version. Empty means no trimming."
+
+  [[records.fields]]
+  name = "given_on"
+  label = "Given on"
+  kind = "date"
+
+  [[records.fields]]
+  name = "how"
+  label = "How it was given"
+  kind = "text"
+  help = "In writing, in person, by message. Worth recording: it is the difference between a consent and a recollection."
+
+  [[records.fields]]
+  name = "kept_where"
+  label = "Where it is kept"
+  kind = "text"
+  help = "The message, the folder, the page. A consent nobody can produce is a consent nobody can rely on."
+
+  [[records.fields]]
+  name = "withdrawn_on"
+  label = "Withdrawn on"
+  kind = "date"
+  help = "When they changed their mind. Set it rather than deleting the record — the fact that consent was given, and then withdrawn, is the history worth keeping."
+
+  [[records.fields]]
+  name = "notes"
+  label = "Notes"
+  kind = "longtext"
+
+[[records]]
+type = "campaign"
+label = "Campaign"
+plural = "Campaigns"
+title_field = "name"
+id_prefix = "CMP"
+id_sequence = true
+
+  [[records.fields]]
+  name = "name"
+  label = "Name"
+  kind = "text"
+  required = true
+  help = "What the operator calls it — 'tomato season', 'the winter boxes'."
+
+  [[records.fields]]
+  name = "subject"
+  label = "What it is about"
+  kind = "text"
+  help = "One line. If it needs two, it is two campaigns."
+
+  [[records.fields]]
+  name = "starts"
+  label = "Starts"
+  kind = "date"
+  help = "From the operator's own calendar, never supplied by an assistant."
+
+  [[records.fields]]
+  name = "ends"
+  label = "Ends"
+  kind = "date"
+
+  [[records.fields]]
+  name = "channel"
+  label = "Main channel"
+  kind = "enum"
+  options = ["market stall", "social", "email", "press", "in person", "other"]
+  help = "Where most of it happens. A campaign can use more than one; say so in the notes rather than inventing a field."
+
+  [[records.fields]]
+  name = "status"
+  label = "Status"
+  kind = "enum"
+  options = ["planned", "running", "done", "dropped"]
+
+  [[records.fields]]
+  name = "notes"
+  label = "Notes"
+  kind = "longtext"
+
+[[screens]]
+id = "consents"
+title = "Consents"
+kind = "list"
+record_type = "consent"
+columns = ["who", "what", "where_used", "withdrawn_on"]
+
+[[screens]]
+id = "campaigns"
+title = "Campaigns"
+kind = "list"
+record_type = "campaign"
+columns = ["name", "subject", "starts", "ends", "status"]

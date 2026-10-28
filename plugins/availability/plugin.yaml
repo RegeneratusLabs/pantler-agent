@@ -1,0 +1,22 @@
+name: availability
+version: 0.1.0
+manifest_version: 2
+api_version: 1
+author: pantler
+license: MIT
+requires_hermes: ">=0.22.1"
+description: >-
+  Turn a spoken field walk into an unpriced, customer-facing availability list: resolve each
+  item against the operator's own catalogue, normalise the quantity and unit, and keep what
+  could not be matched rather than dropping it. The list carries no prices by design.
+tags: [availability, orders, market, catalogue, records]
+provides_tools:
+  - availability_list
+config_schema:
+  pricebook_path:
+    type: str
+    default: ""
+    description: >-
+      Path to the operator's catalogue (the same price book the invoicing tool uses): item
+      names, aliases and units. Defaults to PANTLER_PRICEBOOK, or pricebook.json in
+      HERMES_HOME.

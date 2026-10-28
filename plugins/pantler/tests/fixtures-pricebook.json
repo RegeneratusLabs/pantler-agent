@@ -1,0 +1,12 @@
+{
+  "currency": "AUD",
+  "tax_label": "GST",
+  "tax_rate_bp": 1000,
+  "customers": [
+    { "id": "CUST-001", "name": "Bellview CSA", "aliases": ["the CSA"], "terms_days": 14 }
+  ],
+  "items": [
+    { "id": "ITM-001", "name": "Green Beans", "unit": "kg", "unit_price_cents": 1200, "aliases": ["beans"] },
+    { "id": "ITM-002", "name": "Eggs", "unit": "dozen", "unit_price_cents": 900, "aliases": ["eggs"] }
+  ]
+}

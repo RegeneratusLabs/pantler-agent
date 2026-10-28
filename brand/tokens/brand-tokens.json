@@ -1,0 +1,83 @@
+{
+  "brand": "pantler",
+  "tagline": "Farm business, kept in order",
+  "version": "1.0",
+  "colour": {
+    "ink":   { "hex": "#1B2420", "role": "primary", "usage": "text, logo, UI foreground", "note": "near-black green, not pure black" },
+    "cream": { "hex": "#F7EFDF", "role": "surface", "usage": "page background, logo knockout, inverse text" },
+    "paper": { "hex": "#F8F1E2", "role": "surface-alt", "usage": "cards, panels, invoice paper" },
+    "wheat": { "hex": "#C9922E", "role": "accent", "usage": "marks of completion, ticks, highlights, icon tile" },
+    "crust": { "hex": "#9C4F27", "role": "accent-2", "usage": "warnings, secondary emphasis (sparingly)" },
+    "sand":  { "hex": "#EDE3D0", "role": "surface-deep", "usage": "spec sheets, section separators, muted blocks" }
+  },
+  "contrast": [
+    { "pair": "ink on cream",   "ratio": 13.92, "passes": "AAA" },
+    { "pair": "ink on paper",   "ratio": 14.15, "passes": "AAA" },
+    { "pair": "wheat on ink",   "ratio": 5.78,  "passes": "AA" },
+    { "pair": "wheat on cream", "ratio": 2.41,  "passes": "NO - decoration only" },
+    { "pair": "crust on cream", "ratio": 5.16,  "passes": "AA" },
+    { "pair": "crust on ink",   "ratio": 2.7,   "passes": "NO - decoration only" }
+  ],
+  "type": {
+    "display": {
+      "family": "'Pantler Soft'",
+      "fallback": "Georgia, 'Times New Roman', serif",
+      "source": "Fraunces variable, instanced: opsz 144 / wght 500 / SOFT 100 / WONK 0",
+      "usage": "wordmark, page titles, section headings, numerals in headlines",
+      "min_size_px": 28,
+      "tracking_em": -0.012
+    },
+    "display_small": {
+      "family": "'Pantler Soft Small'",
+      "fallback": "Georgia, serif",
+      "source": "Fraunces variable, instanced: opsz 32 / wght 500 / SOFT 100 / WONK 0",
+      "usage": "16-24px headings, app bar titles, button labels in the brand voice",
+      "min_size_px": 16,
+      "max_size_px": 24,
+      "tracking_em": -0.008
+    },
+    "ui": {
+      "family": "'Inter'",
+      "fallback": "system-ui, -apple-system, 'Segoe UI', sans-serif",
+      "usage": "body copy, forms, tables, captions, all interface text",
+      "weights": [400, 500, 600]
+    },
+    "scale_px": {
+      "caption": 12,
+      "body_s": 14,
+      "body": 16,
+      "body_l": 18,
+      "h4": 22,
+      "h3": 28,
+      "h2": 36,
+      "h1": 48,
+      "display": 64,
+      "display_xl": 96
+    },
+    "line_height": { "body": 1.55, "heading": 1.15, "display": 0.92 },
+    "rule_uplift": "Uppercase labels get +0.26em tracking (see the tagline), letter-spaced never below 0.08em."
+  },
+  "space": { "unit_px": 4, "scale": [4, 8, 12, 16, 24, 32, 48, 64, 96] },
+  "radius_px": { "sm": 6, "md": 10, "lg": 16, "pill": 999, "icon_tile": "22% of tile width" },
+  "motion": {
+    "ease_out": "cubic-bezier(0.16, 1, 0.3, 1)",
+    "ease_in_out": "cubic-bezier(0.65, 0, 0.35, 1)",
+    "duration_px": { "micro": 120, "base": 200, "entrance": 320, "celebration": 600 },
+    "squash_max": 1.18,
+    "note": "the mascot squashes 18% on landing and never spins; no bounce longer than 600ms"
+  },
+  "logo": {
+    "clear_space": "0.5 x mark height on every side",
+    "min_width_px": { "mark": 24, "mark_compact": 16, "horizontal_lockup": 120, "stacked_lockup": 88, "wordmark_only": 96 },
+    "colours_allowed": ["ink", "cream", "wheat"],
+    "construction": { "mark_w": 340, "mark_h": 369, "feet_h": 18, "leaf_angle_deg": 52, "stem_w": 15 },
+    "files": {
+      "horizontal": ["logo/pantler-logo-horizontal-ink.svg", "logo/pantler-logo-horizontal-cream.svg", "logo/pantler-logo-horizontal-wheat.svg"],
+      "stacked": ["logo/pantler-logo-stacked-ink.svg", "logo/pantler-logo-stacked-cream.svg"],
+      "wordmark": ["logo/pantler-wordmark-ink.svg", "logo/pantler-wordmark-cream.svg"],
+      "mark": ["logo/pantler-mark-ink.svg", "logo/pantler-mark-cream.svg", "logo/pantler-mark-wheat.svg"],
+      "app_icon": ["logo/pantler-icon-cream.svg", "logo/pantler-icon-ink.svg", "logo/pantler-icon-wheat.svg"],
+      "favicon": ["logo/pantler-icon-compact-ink.svg", "logo/pantler-icon-compact-cream.svg"]
+    }
+  }
+}

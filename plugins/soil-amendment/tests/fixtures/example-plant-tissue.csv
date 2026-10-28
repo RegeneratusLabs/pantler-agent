@@ -1,0 +1,13 @@
+Report ID,E26-00-7777_EALP1_1,,
+Client Sample ID:,,,Leaf Block 1
+Plant Part:,,,Leaf
+Sample Date:,,,3 Mar 2026
+Parameter,Unit,Method Reference,LOR,---
+Total Carbon,%,Inhouse S4a,<0.02,46.8
+Total Nitrogen,%,Inhouse S4a,<0.02,3.56
+Crude Protein,%,Inhouse S4a,<0.13,22.3
+Potassium,%,** Nitric Acid digest,<0.005,3.70
+Calcium,%,** Nitric Acid digest,<0.005,2.24
+Magnesium,%,** Nitric Acid digest,<0.005,0.53
+Copper,mg/kg,** Nitric Acid digest,<1,7.5
+Zinc,mg/kg,** Nitric Acid digest,<1,50

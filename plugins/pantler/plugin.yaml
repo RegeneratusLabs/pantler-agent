@@ -1,0 +1,38 @@
+name: pantler
+version: 0.0.1
+manifest_version: 2
+api_version: 1
+author: pantler
+license: MIT
+requires_hermes: ">=0.22.1"
+description: >-
+  pantler's own tools: draft an invoice from the operator's price book and read a saved
+  draft back from the record store. Nothing here is sent — the draft is written into the
+  money pack so it survives a restart, and the number is reserved in the store so it is
+  never issued twice. The plugin also registers the profile-scope guard that keeps another
+  business's workspace and profile state out of this one.
+tags: [invoicing, money, records, pricebook, scope]
+provides_tools:
+  - invoice_create
+  - invoice_show
+config_schema:
+  pricebook_path:
+    type: str
+    default: ""
+    description: >-
+      Path to the operator's price book: customers, items, units, prices and the tax
+      rate. Defaults to PANTLER_PRICEBOOK, or pricebook.json beside the profile's
+      config.yaml.
+  store_path:
+    type: str
+    default: ""
+    description: >-
+      Path to the records database the app reads. The invoice number's sequence and the
+      saved drafts live there. Defaults to records.db beside the profile's config.yaml,
+      or PANTLER_STORE in the environment.
+  packs_dir:
+    type: str
+    default: ""
+    description: >-
+      Directory holding the installed packs. Defaults to packs/ beside the profile's
+      config.yaml, or PANTLER_PACKS in the environment.

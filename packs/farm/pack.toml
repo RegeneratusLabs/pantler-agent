@@ -1,0 +1,336 @@
+# The farm pack — growing it.
+#
+# A pack is the domain layer for one market or workstream: its records, its screens, its vocabulary
+# (the design notes §8). This one is the first real pack in the tree (packs-fixtures/example is a contract
+# fixture, kept out of the shipped root — the internal audit PACK-1),
+# and it starts with the Phase 0 slice the design notes §9 argues for: a spray becomes a record with a
+# withholding period.
+#
+# The boundary this file respects, and the reason the shape is what it is:
+#
+#   * **The label facts belong on the input record.** A withholding period is a number off a
+#     product label, entered once by the operator. It is not knowledge the assistant may supply,
+#     and no skill in this repository states one (the skill drafts — the compliance drafts say so
+#     explicitly). Forgetting that is how a plausible number reaches a spray record.
+#   * **The application freezes what it was given.** `withholding_days` is copied onto the
+#     application when it is recorded, and `earliest_safe_date` is computed from it. An inspector
+#     asks what the rule was *on the day*, not what the label says today, and a later edit to the
+#     input must not silently rewrite history (the lesson a live product in this market learned the
+#     expensive way — the skills and plugins notes §2.6).
+#   * **Nothing here computes.** The pack declares types and fields; the arithmetic lives in the
+#     pack's plugin (`plugins/`), and the model narrates the result (invariant 1).
+
+id = "farm"
+name = "Farm"
+version = "0.1.0"
+description = "Growing it: the blocks, the inputs and what was applied to them, and what came off."
+
+[[records]]
+type = "block"
+label = "Block"
+plural = "Blocks"
+title_field = "name"
+id_prefix = "BLK"
+id_sequence = true
+
+  [[records.fields]]
+  name = "name"
+  label = "Name"
+  kind = "text"
+  required = true
+  help = "The name the operator uses for it — 'north block', 'the bottom paddock'."
+
+  [[records.fields]]
+  name = "area_ha"
+  label = "Area"
+  kind = "number"
+  help = "Hectares. Used to check a rate against the area treated."
+
+  [[records.fields]]
+  name = "certified"
+  label = "Certified"
+  kind = "enum"
+  options = ["organic", "in conversion", "conventional"]
+  help = "What this block may be sold as. The certifier decides, not this record."
+
+  [[records.fields]]
+  name = "notes"
+  label = "Notes"
+  kind = "longtext"
+
+[[records]]
+type = "input"
+label = "Input"
+plural = "Inputs"
+title_field = "name"
+id_prefix = "INP"
+id_sequence = true
+
+  [[records.fields]]
+  name = "name"
+  label = "Product"
+  kind = "text"
+  required = true
+
+  [[records.fields]]
+  name = "active_ingredient"
+  label = "Active ingredient"
+  kind = "text"
+
+  [[records.fields]]
+  name = "registration"
+  label = "Label or registration"
+  kind = "text"
+  help = "The label this came off — a reference the record can be audited against."
+
+  [[records.fields]]
+  name = "withholding_days"
+  label = "Withholding period"
+  kind = "number"
+  help = "Days from the label. Leave it empty rather than guessing: an untraced number here becomes an untraced number on every application."
+
+  [[records.fields]]
+  name = "re_entry_hours"
+  label = "Re-entry period"
+  kind = "number"
+  help = "Hours, from the label."
+
+  [[records.fields]]
+  name = "unit"
+  label = "Sold by"
+  kind = "enum"
+  options = ["L", "mL", "kg", "g"]
+  help = "The unit the label rates this product in."
+
+  [[records.fields]]
+  name = "max_rate"
+  label = "Maximum rate"
+  kind = "number"
+  help = "The label's maximum rate per hectare. The spray tool compares an application against it and asks rather than clamping — leave it empty if the label does not state one."
+
+  [[records.fields]]
+  name = "max_rate_unit"
+  label = "Maximum rate unit"
+  kind = "enum"
+  options = ["L/ha", "mL/ha", "kg/ha", "g/ha"]
+  help = "The unit the maximum is quoted in. A rate in different units is not compared, and the tool says so."
+
+  [[records.fields]]
+  name = "notes"
+  label = "Notes"
+  kind = "longtext"
+
+[[records]]
+type = "application"
+label = "Application"
+plural = "Applications"
+# Three fields, because none of them distinguishes two applications on its own: two sprays in
+# different blocks on one day, or two products in one block, read identically under "date" alone
+# (the internal audit PACK-2).
+title_field = ["input", "block", "date"]
+id_prefix = "APP"
+id_sequence = true
+
+  [[records.fields]]
+  name = "date"
+  label = "Date applied"
+  kind = "date"
+  required = true
+
+  [[records.fields]]
+  name = "block"
+  label = "Block"
+  kind = "reference"
+  reference = "block"
+  required = true
+
+  [[records.fields]]
+  name = "input"
+  label = "Product"
+  kind = "reference"
+  reference = "input"
+  required = true
+
+  [[records.fields]]
+  name = "rate"
+  label = "Rate"
+  kind = "number"
+  required = true
+  help = "As the operator said it, with the unit below. The tool checks it against the area."
+
+  [[records.fields]]
+  name = "rate_unit"
+  label = "Rate unit"
+  kind = "enum"
+  options = ["L/ha", "mL/ha", "kg/ha", "g/ha", "mL/100L", "g/100L"]
+  help = "Concentration rates (per 100 L) and area rates (per ha) are different sums; the record says which."
+
+  [[records.fields]]
+  name = "area_ha"
+  label = "Area treated"
+  kind = "number"
+  help = "Hectares. The product used is the rate times this."
+
+  [[records.fields]]
+  name = "operator"
+  label = "Operator"
+  kind = "text"
+
+  [[records.fields]]
+  name = "withholding_days"
+  label = "Withholding period applied"
+  kind = "number"
+  help = "Frozen from the input when this was recorded. Left empty when the product had none on file — an empty field is honest, an assumed one is not."
+
+  [[records.fields]]
+  name = "earliest_safe_date"
+  label = "Earliest safe harvest"
+  kind = "date"
+  help = "Computed from the date applied and the withholding period. The tool writes it; the assistant reads it."
+
+  [[records.fields]]
+  name = "notes"
+  label = "Notes"
+  kind = "longtext"
+
+[[records]]
+type = "harvest"
+label = "Harvest"
+plural = "Harvests"
+# The lot, not the date: this pack calls `lot` "the lot identity every later compliance record
+# hangs from", and two harvests of different lots share a date
+# (the internal audit PACK-2).
+title_field = "lot"
+id_prefix = "HAR"
+id_sequence = true
+
+  [[records.fields]]
+  name = "lot"
+  label = "Lot"
+  kind = "text"
+  required = true
+  help = "The lot identity every later compliance record hangs from. Made once, at harvest."
+
+  [[records.fields]]
+  name = "date"
+  label = "Date"
+  kind = "date"
+  required = true
+
+  [[records.fields]]
+  name = "block"
+  label = "Block"
+  kind = "reference"
+  reference = "block"
+
+  [[records.fields]]
+  name = "quantity"
+  label = "Quantity"
+  kind = "number"
+
+  [[records.fields]]
+  name = "unit"
+  label = "Unit"
+  kind = "enum"
+  options = ["kg", "bunch", "box", "punnet", "dozen", "L"]
+
+  [[records.fields]]
+  name = "notes"
+  label = "Notes"
+  kind = "longtext"
+
+[[records]]
+type = "certificate"
+label = "Certificate"
+plural = "Certificates"
+title_field = "scheme"
+id_prefix = "CERT"
+id_sequence = true
+
+  [[records.fields]]
+  name = "holder"
+  label = "Whose certificate"
+  kind = "enum"
+  options = ["our business", "a supplier"]
+  required = true
+  help = "Ours or a supplier's. The answer to 'are we certified?' is this record, not the assistant's opinion."
+
+  [[records.fields]]
+  name = "scheme"
+  label = "Scheme"
+  kind = "text"
+  required = true
+  help = "The certification or scheme as the certificate names it — the operator's words, not ours."
+
+  [[records.fields]]
+  name = "certifier"
+  label = "Certifier"
+  kind = "text"
+  help = "The body that issued it. It certifies; we hold the record."
+
+  [[records.fields]]
+  name = "number"
+  label = "Certificate number"
+  kind = "text"
+
+  [[records.fields]]
+  name = "scope"
+  label = "Scope"
+  kind = "longtext"
+  help = "What the certificate covers — which products, blocks or operations. A certificate that does not name the thing being sold does not cover it."
+
+  [[records.fields]]
+  name = "supplier_name"
+  label = "Supplier"
+  kind = "text"
+  help = "For a supplier's certificate: who holds it."
+
+  [[records.fields]]
+  name = "issued"
+  label = "Issued"
+  kind = "date"
+
+  [[records.fields]]
+  name = "expires"
+  label = "Expires"
+  kind = "date"
+  help = "The date the operator checks before selling. An expired certificate is worth saying out loud, early."
+
+  [[records.fields]]
+  name = "evidence"
+  label = "Where the paper is"
+  kind = "text"
+  help = "The file, folder or drawer the certificate itself lives in."
+
+  [[records.fields]]
+  name = "notes"
+  label = "Notes"
+  kind = "longtext"
+
+[[screens]]
+id = "certificates"
+title = "Certificates"
+kind = "list"
+record_type = "certificate"
+columns = ["scheme", "holder", "number", "expires"]
+
+[[screens]]
+id = "spray-book"
+title = "Spray book"
+kind = "list"
+record_type = "application"
+columns = ["date", "block", "input", "rate", "earliest_safe_date"]
+
+[[screens]]
+id = "blocks"
+title = "Blocks"
+kind = "list"
+record_type = "block"
+columns = ["name", "area_ha", "certified"]
+
+[[screens]]
+id = "harvests"
+title = "Harvests"
+kind = "list"
+record_type = "harvest"
+columns = ["date", "lot", "block", "quantity", "unit"]

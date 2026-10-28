@@ -1,0 +1,8 @@
+This profile opted out of bundled-skill seeding.
+
+The engine seeds its own skills into every profile: apple-notes, imessage, social-media,
+songwriting, and dozens more. They are good skills for a general-purpose assistant and the wrong
+ones for a food business's machine, so pantler ships this marker and the engine seeds only
+ESSENTIAL_SKILLS (hermes-agent, its own operating manual, which cannot be removed).
+
+Delete this file and the next `hermes update` will re-seed the bundled set into this profile.
