@@ -1,6 +1,18 @@
-# Pantler
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="brand/png/pantler-logo-horizontal-cream.png">
+    <img src="brand/png/pantler-logo-horizontal-ink.png" alt="Pantler" width="380">
+  </picture>
+</p>
 
-**The assistant that does the paperwork for your food business.**
+<h3 align="center">The assistant that does the paperwork for your food business</h3>
+
+<p align="center">
+  Invoices, spray records, compliance, labels, posts and a market-day sign — done in conversation,
+  kept in your own files.
+</p>
+
+![Pantler's chat: a question about a small carrot farm, answered with a short plan and one follow-up question](media/chat.png)
 
 Pantler lives on your own computer. You talk to it the way you would talk to a good office
 manager — *"invoice Bellview for last week's boxes"*, *"log the copper spray on the north block"*,
@@ -29,6 +41,31 @@ middle: the only thing that leaves your computer is the model call you configure
 Twenty-five skills ship in the box, and nine plugins give the assistant its hands: records, soil
 amendments, spray, availability, claims, consent, connectors, the profile guard and the design
 studio.
+
+## A look inside
+
+**Everything it can do, in one place.** Skills, plugins and the apps it can reach — each row says
+what it needs and when a change lands.
+
+![The Capabilities screen: skills and plugins with switches, and the Connectors tab beside them](media/capabilities.png)
+
+**Design that is measured, not guessed.** A market-day sign drawn from a written brief. Margins,
+type sizes, line breaks, safe zones and contrast are computed in code — the model supplies the
+words, not the coordinates.
+
+![A market-day sign in ink and cream, with the day, the hours, the produce and the farm's name](media/market-day-sign.png)
+
+## Built on Hermes — thanks to Nous Research
+
+Pantler is not an agent written from scratch. The engine underneath — the loop that runs the
+model, the tools, the approvals, the sessions and the scheduling — is **Hermes**, built by
+[Nous Research](https://nousresearch.com) and released as open source at
+[`NousResearch/hermes-agent`](https://github.com/NousResearch/hermes-agent). Pantler pins one
+commit of it (`engine-pin.json`, checked by the test suite) and builds the product, the packs, the
+skills and this app on top.
+
+Thank you to the Hermes team at Nous Research. The harness is careful, honest about what it does,
+and a pleasure to build against — Pantler would not exist without it.
 
 ## Why it is built this way
 
@@ -102,7 +139,7 @@ business with a price book, so the invoice tools have something to read before y
 
 ## Status
 
-**Early release, 0.0.2.** The assistant works end to end and the test suites are green, but this is
+**Early release, 0.0.3.** The assistant works end to end and the test suites are green, but this is
 still an early cut: paths will change, and records written today are worth copying somewhere safe
 until automatic backup lands.
 

@@ -1,0 +1,45 @@
+name: Release
+
+# The tag is the release. `scripts/export-public.sh` in the maintainers' tree publishes one commit
+# per release and one annotated tag whose message is the release notes; this workflow decides
+# nothing about what a release says. It only turns that tag into a page, so publishing needs no
+# personal token on anyone's machine.
+#
+# Requires Settings → Actions → General → Workflow permissions → "Read and write permissions";
+# the `contents: write` below is capped by that repository setting.
+on:
+  push:
+    tags: ["v*"]
+
+# A release is never cancelled halfway: a half-created release page is worse than a late one.
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: publish the tag
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          # The tag's message is read from the tag object, so the tag must be fetched.
+          fetch-depth: 0
+      - name: Create the release from the tag's notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag="$GITHUB_REF_NAME"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "release $tag already exists — nothing to do"
+            exit 0
+          fi
+          git tag -l --format='%(contents)' "$tag" > notes.md
+          gh release create "$tag" \
+            --title "Pantler $tag" \
+            --notes-file notes.md \
+            --verify-tag

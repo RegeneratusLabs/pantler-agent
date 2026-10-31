@@ -10,7 +10,7 @@
 # instead — see profile_distribution.py:343-353.
 
 name: pantler
-version: 0.0.2
+version: 0.0.3
 description: pantler — the personal assistant harness for a small food business, run conversationally.
 author: pantler
 license: MIT

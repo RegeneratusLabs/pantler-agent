@@ -56,6 +56,9 @@ CI runs the same three commands. A pull request that adds behaviour without a te
 asked for one, and a change that moves the tool surface without re-capturing
 `baseline/pantler-toolsets.json` deliberately will fail.
 
+A merged change is carried into the next release. Releases replace the published tree but keep
+the history, so your commit stays in it.
+
 If you changed anything under `core/`, regenerate the vendored copies first:
 
 ```sh
