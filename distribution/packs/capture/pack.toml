@@ -1,0 +1,86 @@
+# The capture pack — the operator's words before they become a record.
+#
+# A capture is not a typed record and it is not a memory note. It is the raw sentence the
+# operator said, kept immediately, with the date it happened (when they gave one), where it came
+# from, and what it later became. That is what lets someone say "I sprayed the tomatoes in block
+# B today" without filling a form, while the typed application still goes through the spray tool
+# and its withholding checks.
+#
+# The link fields are deliberately plain text: a capture can be promoted to any record type, so a
+# fixed `reference` would name only one of them. `capture_link` validates that the target record
+# exists before it writes the link; the page shows the id the operator can open.
+#
+# Status: `captured` is a raw note; `promoted` means a typed record now exists; `dismissed` means
+# the operator did not want to keep it. Nothing deletes a capture when it is promoted — the raw
+# words stay as the evidence behind the record.
+
+id = "capture"
+name = "Captures"
+version = "0.1.0"
+description = "The operator's own words, saved immediately and linked to the record they became."
+
+[[records]]
+type = "capture"
+label = "Capture"
+plural = "Captures"
+title_field = "text"
+id_prefix = "CAP"
+id_sequence = true
+
+  [[records.fields]]
+  name = "text"
+  label = "What was said"
+  kind = "longtext"
+  required = true
+  help = "The operator's words, as close to how they said them as possible. Do not tidy them into a summary."
+
+  [[records.fields]]
+  name = "occurred_on"
+  label = "Happened on"
+  kind = "date"
+  help = "The day it happened, when the operator gave one. Empty when they did not; the created time is always kept."
+
+  [[records.fields]]
+  name = "status"
+  label = "Status"
+  kind = "enum"
+  required = true
+  options = ["captured", "promoted", "dismissed"]
+  help = "captured: a raw note; promoted: a typed record exists; dismissed: not wanted."
+
+  [[records.fields]]
+  name = "source"
+  label = "Came from"
+  kind = "enum"
+  options = ["chat", "voice", "import", "other"]
+  help = "Where the words arrived. Chat is the normal path."
+
+  [[records.fields]]
+  name = "record_type"
+  label = "Record type"
+  kind = "text"
+  help = "The type of the record this capture became, once it is promoted."
+
+  [[records.fields]]
+  name = "record_id"
+  label = "Record"
+  kind = "text"
+  help = "The id of the record this capture became, once it is promoted."
+
+  [[records.fields]]
+  name = "tags"
+  label = "Tags"
+  kind = "text"
+  help = "A few words for finding it again: a block, a product, a customer. Optional."
+
+  [[records.fields]]
+  name = "notes"
+  label = "Notes"
+  kind = "longtext"
+
+[[screens]]
+id = "captures"
+title = "Captures"
+kind = "list"
+record_type = "capture"
+columns = ["occurred_on", "text", "status", "record_id"]

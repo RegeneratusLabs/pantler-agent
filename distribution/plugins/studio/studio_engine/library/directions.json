@@ -1,0 +1,245 @@
+{
+  "_note": "Sixteen directions, each an argument about how a food business should look, not a colour scheme. A direction is dealt for a job and may be pinned for a brand; the operator can always choose another. `posture` is what the brand interview maps an answer to.",
+  "directions": [
+    {
+      "id": "01-quiet-ledger",
+      "name": "The quiet ledger",
+      "idea": "A broadsheet for a business that keeps books: one measured line, a hairline, a specimen of the record. Trust comes from restraint, not from a badge.",
+      "suits": ["mixed farm", "grower", "producer", "wholesale"],
+      "palette": "ledger-paper",
+      "type": "young-serif-barlow",
+      "photo": "optional",
+      "posture": ["quiet", "editorial"],
+      "rules": [
+        "one hairline under the header and one under the footer, never both around a block",
+        "the headline is the only large element; everything else is 3 mm of quiet",
+        "numbers are set in the label face so they read as evidence"
+      ]
+    },
+    {
+      "id": "02-field-notes",
+      "name": "Field notes",
+      "idea": "A field guide page: a place, a date, a crop, a note in the margin. The design says the work happens outside and is written down.",
+      "suits": ["market garden", "orchard", "regenerative farm"],
+      "palette": "field-sage",
+      "type": "condensed-serif",
+      "photo": "band",
+      "posture": ["warm", "quiet"],
+      "rules": [
+        "a photograph is a band across the top, never a background for type",
+        "the date belongs on the card, in the label face",
+        "leave the top-left corner empty so the eye starts on the headline"
+      ]
+    },
+    {
+      "id": "03-pantry-shelf",
+      "name": "The pantry shelf",
+      "idea": "The metaphor made physical: jars on a shelf, a handwritten label, a receipt. Warmth without nostalgia for its own sake.",
+      "suits": ["preserves", "bakery", "honey", "dairy"],
+      "palette": "pantry-sand",
+      "type": "young-serif-mono",
+      "photo": "optional",
+      "posture": ["warm", "playful"],
+      "rules": [
+        "the mono label is the handwriting stand-in — tracked, small, never a script font",
+        "one warm rule, no boxes",
+        "stack the list left and keep the right margin empty"
+      ]
+    },
+    {
+      "id": "04-long-table",
+      "name": "One long table",
+      "idea": "Dark, communal, mission-led. A plate set for one, and a belief about who the food is for.",
+      "suits": ["producer", "restaurant supplier", "community supported agriculture"],
+      "palette": "charcoal-leaf",
+      "type": "serif-only",
+      "photo": "optional",
+      "posture": ["bold", "warm"],
+      "rules": [
+        "dark ground, cream type, one green or wheat accent",
+        "no boxes, no badges, no gradient",
+        "allow a long serif line to breathe; do not fill the empty right half"
+      ]
+    },
+    {
+      "id": "05-workbench",
+      "name": "The workbench",
+      "idea": "Product-first proof: a real number, a real date, a real record. The card behaves like the label on a crate.",
+      "suits": ["producer", "butcher", "packer", "wholesale"],
+      "palette": "neutral-stone",
+      "type": "barlow-mono",
+      "photo": "optional",
+      "posture": ["clean", "quiet"],
+      "rules": [
+        "the label face carries the facts; the grotesque carries the claim",
+        "align every fact to one left edge",
+        "a rule is a separator, not decoration"
+      ]
+    },
+    {
+      "id": "06-bread-and-ledger",
+      "name": "Bread & ledger",
+      "idea": "Poster campaign: four words, enormous, in a condensed face. The message lands before the explanation.",
+      "suits": ["bakery", "market stall", "launch"],
+      "palette": "ink-wheat",
+      "type": "condensed-grotesk",
+      "photo": "none",
+      "posture": ["bold", "playful"],
+      "rules": [
+        "the display size is the idea; do not shrink it to fit more words",
+        "one accent only, and only on a rule or a single line",
+        "if the words do not fit at poster size, the words are wrong"
+      ]
+    },
+    {
+      "id": "07-market-chalk",
+      "name": "Market chalk",
+      "idea": "The board at the stall: tall capitals, a price, a line drawn by hand that is not a handwriting font.",
+      "suits": ["market stall", "greengrocer", "farmers market"],
+      "palette": "night-market",
+      "type": "condensed-mono",
+      "photo": "none",
+      "posture": ["bold", "playful"],
+      "rules": [
+        "light type on a dark ground, no chalk texture",
+        "prices in the label face, aligned right",
+        "leave the bottom third for the day and the place"
+      ]
+    },
+    {
+      "id": "08-produce-catalogue",
+      "name": "Produce catalogue",
+      "idea": "A grower's list, set like a catalogue: named varieties, a date, no adjectives. The card is an index, not an advertisement.",
+      "suits": ["market garden", "orchard", "CSA"],
+      "palette": "market-white",
+      "type": "barlow-only",
+      "photo": "optional",
+      "posture": ["clean", "quiet"],
+      "rules": [
+        "variety names are the headline; the category is the eyebrow",
+        "one column, generous leading, a hairline between rows",
+        "no exclamation marks anywhere on the card"
+      ]
+    },
+    {
+      "id": "09-seasonal-almanac",
+      "name": "Seasonal almanac",
+      "idea": "A month page: what is coming, what is going, what is only here for a fortnight. Time is the subject.",
+      "suits": ["grower", "market garden", "preserves"],
+      "palette": "citrus-cream",
+      "type": "condensed-serif",
+      "photo": "optional",
+      "posture": ["warm", "editorial"],
+      "rules": [
+        "the month is a tracked label, not a headline",
+        "the list is the headline; set it larger than a list normally is",
+        "one accent rule under the month"
+      ]
+    },
+    {
+      "id": "10-harvest-festival",
+      "name": "Harvest festival",
+      "idea": "Celebration with a straight face: a big red, a big line, a date. For the one week a year the business shouts.",
+      "suits": ["farm", "orchard", "market", "community event"],
+      "palette": "market-tomato",
+      "type": "condensed-grotesk",
+      "photo": "optional",
+      "posture": ["bold", "playful"],
+      "rules": [
+        "the accent may be decoration here, but never behind type it cannot carry",
+        "one date, one place, one action",
+        "do not add a second red"
+      ]
+    },
+    {
+      "id": "11-apothecary",
+      "name": "The apothecary",
+      "idea": "Brown glass and small caps: a tincture, a tonic, a cordial. Precision is the aesthetic.",
+      "suits": ["drinks", "tonics", "vinegar", "preserves"],
+      "palette": "espresso-cream",
+      "type": "mono-serif",
+      "photo": "none",
+      "posture": ["quiet", "editorial"],
+      "rules": [
+        "the display face is the mono; the warmth comes from the serif body",
+        "tracked capitals for every label",
+        "no illustration, no icon, no drop shadow"
+      ]
+    },
+    {
+      "id": "12-green-grocer",
+      "name": "Green grocer",
+      "idea": "Bright, plain, modern: a shopfront painted last year. Clean type, one accent, produce does the colour.",
+      "suits": ["greengrocer", "food hub", "delivery"],
+      "palette": "ocean-cream",
+      "type": "barlow-only",
+      "photo": "optional",
+      "posture": ["clean", "bold"],
+      "rules": [
+        "one family, three weights — hierarchy from weight and size only",
+        "the accent is a rule or a single word, never a background wash",
+        "left-aligned throughout; nothing centred"
+      ]
+    },
+    {
+      "id": "13-bistro-menu",
+      "name": "Bistro menu",
+      "idea": "A printed menu from a place that has been there a while: a rule, a small caps heading, a price at the right edge.",
+      "suits": ["restaurant supplier", "deli", "bakery cafe"],
+      "palette": "butcher-paper",
+      "type": "serif-only",
+      "photo": "none",
+      "posture": ["warm", "editorial"],
+      "rules": [
+        "prices right-aligned to one edge, never mid-row",
+        "one rule under the heading, none between dishes",
+        "set the whole card in one colour plus the accent"
+      ]
+    },
+    {
+      "id": "14-trust-and-records",
+      "name": "Trust & records",
+      "idea": "The specimen: a certificate number, a batch, a date. For the buyer who needs to check something.",
+      "suits": ["wholesale", "certified organic", "export"],
+      "palette": "neutral-stone",
+      "type": "mono-serif",
+      "photo": "none",
+      "posture": ["quiet", "clean"],
+      "rules": [
+        "every claim carries its reference on the same line",
+        "the mono face is for anything an auditor would read",
+        "no certification badges — they belong to the certifier"
+      ]
+    },
+    {
+      "id": "15-dawn-run",
+      "name": "Dawn run",
+      "idea": "The delivery window as a timetable: a route, a time, a cut-off. Movement rather than produce.",
+      "suits": ["delivery", "food hub", "wholesale", "CSA"],
+      "palette": "cold-press",
+      "type": "condensed-grotesk",
+      "photo": "none",
+      "posture": ["clean", "bold"],
+      "rules": [
+        "times are the largest thing after the headline",
+        "one vertical rhythm for every row",
+        "a cut-off is stated once, in the accent"
+      ]
+    },
+    {
+      "id": "16-paper-bag",
+      "name": "Paper bag",
+      "idea": "Kraft, a stamp, a name typed on a machine. The card looks like the thing the food arrives in.",
+      "suits": ["bakery", "market stall", "takeaway", "preserves"],
+      "palette": "sun-bleached",
+      "type": "barlow-mono",
+      "photo": "none",
+      "posture": ["playful", "warm"],
+      "rules": [
+        "the label face carries the name and the date",
+        "one rule that looks stamped, not drawn",
+        "keep at least a third of the card empty"
+      ]
+    }
+  ]
+}

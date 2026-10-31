@@ -1,0 +1,341 @@
+{
+  "_note": "Every palette is authored for this product and measured before it ships: `ink` on `ground` clears 4.5:1 or the library refuses to load. `accent` may fall below that, in which case the renderer refuses to set type in it and uses the ink instead (layout.accent_ink).",
+  "palettes": [
+    {
+      "id": "produce-cream",
+      "name": "Produce cream",
+      "group": "produce",
+      "ground": "#F7EFDF",
+      "ink": "#1B2420",
+      "accent": "#A0562F",
+      "accent2": "#6B7A3A",
+      "note": "the neutral market-garden ground; terracotta carries a headline, sage is decoration",
+      "contrast": {
+        "ink": 13.92,
+        "accent": 4.75
+      }
+    },
+    {
+      "id": "ledger-paper",
+      "name": "Ledger paper",
+      "group": "neutral",
+      "ground": "#FFFDF8",
+      "ink": "#1F2A24",
+      "accent": "#2F5D62",
+      "accent2": "#C9922E",
+      "note": "a warm white for anything that has to read as a record",
+      "contrast": {
+        "ink": 14.6,
+        "accent": 7.22
+      }
+    },
+    {
+      "id": "market-white",
+      "name": "Market white",
+      "group": "market",
+      "ground": "#FFFDF8",
+      "ink": "#23211D",
+      "accent": "#C0453A",
+      "accent2": "#2F5D62",
+      "note": "bright enough for a stall board in daylight; tomato accent",
+      "contrast": {
+        "ink": 15.81,
+        "accent": 4.97
+      }
+    },
+    {
+      "id": "bakery-butter",
+      "name": "Bakery butter",
+      "group": "bakery",
+      "ground": "#F4E9CE",
+      "ink": "#2A2118",
+      "accent": "#9C4F27",
+      "accent2": "#C9922E",
+      "note": "flour and crust; the accent is the baked edge, not a brand colour",
+      "contrast": {
+        "ink": 13.09,
+        "accent": 4.88
+      }
+    },
+    {
+      "id": "pantry-sand",
+      "name": "Pantry sand",
+      "group": "neutral",
+      "ground": "#EDE3D0",
+      "ink": "#1B2420",
+      "accent": "#6E3B52",
+      "accent2": "#C9922E",
+      "note": "the shelf in a pantry; plum keeps it from going sepia",
+      "contrast": {
+        "ink": 12.5,
+        "accent": 6.84
+      }
+    },
+    {
+      "id": "field-sage",
+      "name": "Field sage",
+      "group": "produce",
+      "ground": "#EDEFE6",
+      "ink": "#22201C",
+      "accent": "#4F6B4A",
+      "accent2": "#A0562F",
+      "note": "a green that is not the default startup green",
+      "contrast": {
+        "ink": 14.01,
+        "accent": 5.12
+      }
+    },
+    {
+      "id": "honey-warm",
+      "name": "Honey warm",
+      "group": "honey",
+      "ground": "#F6EBD3",
+      "ink": "#241C17",
+      "accent": "#9C4F27",
+      "accent2": "#6B7A3A",
+      "note": "for preserves and honey; amber is ground, not text",
+      "contrast": {
+        "ink": 14.15,
+        "accent": 4.98
+      }
+    },
+    {
+      "id": "dairy-paper",
+      "name": "Dairy paper",
+      "group": "dairy",
+      "ground": "#F7F6F1",
+      "ink": "#22221F",
+      "accent": "#7A6A45",
+      "accent2": "#2F5D62",
+      "note": "clean without being clinical; the accent is a warm grey-brown",
+      "contrast": {
+        "ink": 14.74,
+        "accent": 4.88
+      }
+    },
+    {
+      "id": "flower-blush",
+      "name": "Flower blush",
+      "group": "flowers",
+      "ground": "#F6EAE7",
+      "ink": "#241E1C",
+      "accent": "#6E3B52",
+      "accent2": "#4F6B4A",
+      "note": "for flowers and anything sold on looks",
+      "contrast": {
+        "ink": 13.97,
+        "accent": 7.4
+      }
+    },
+    {
+      "id": "coffee-cream",
+      "name": "Coffee cream",
+      "group": "coffee",
+      "ground": "#F0E6D8",
+      "ink": "#241C17",
+      "accent": "#9C4F27",
+      "accent2": "#7A6A45",
+      "note": "espresso crema; warm, never tan-on-tan",
+      "contrast": {
+        "ink": 13.57,
+        "accent": 4.78
+      }
+    },
+    {
+      "id": "market-tomato",
+      "name": "Market tomato",
+      "group": "produce",
+      "ground": "#FBEFE7",
+      "ink": "#241C17",
+      "accent": "#C0453A",
+      "accent2": "#4F6B4A",
+      "note": "tomato season; the red is the announcement",
+      "contrast": {
+        "ink": 14.84,
+        "accent": 4.48
+      }
+    },
+    {
+      "id": "ocean-cream",
+      "name": "Ocean cream",
+      "group": "drinks",
+      "ground": "#EAF0EE",
+      "ink": "#16221F",
+      "accent": "#2F5D62",
+      "accent2": "#C9922E",
+      "note": "for drinks, seafood and anything cold-chain",
+      "contrast": {
+        "ink": 14.19,
+        "accent": 6.36
+      }
+    },
+    {
+      "id": "neutral-stone",
+      "name": "Neutral stone",
+      "group": "neutral",
+      "ground": "#F2F1EC",
+      "ink": "#232322",
+      "accent": "#2B3A55",
+      "accent2": "#A0562F",
+      "note": "the quiet default when the operator has no colour yet",
+      "contrast": {
+        "ink": 13.91,
+        "accent": 10.1
+      }
+    },
+    {
+      "id": "citrus-cream",
+      "name": "Citrus cream",
+      "group": "produce",
+      "ground": "#FBF4DE",
+      "ink": "#24200F",
+      "accent": "#8C6E4A",
+      "accent2": "#4F6B4A",
+      "note": "a pale yellow ground for summer produce",
+      "contrast": {
+        "ink": 14.82,
+        "accent": 4.3
+      }
+    },
+    {
+      "id": "produce-deep",
+      "name": "Produce deep",
+      "group": "produce",
+      "ground": "#14201B",
+      "ink": "#F2ECE0",
+      "accent": "#D9A441",
+      "accent2": "#A8C07A",
+      "note": "a dark card for a night market; wheat is the only warm note",
+      "contrast": {
+        "ink": 14.26,
+        "accent": 7.46
+      }
+    },
+    {
+      "id": "night-market",
+      "name": "Night market",
+      "group": "market",
+      "ground": "#16191A",
+      "ink": "#EFE9DD",
+      "accent": "#C97B4A",
+      "accent2": "#C9922E",
+      "note": "dark charcoal with a copper accent",
+      "contrast": {
+        "ink": 14.62,
+        "accent": 5.4
+      }
+    },
+    {
+      "id": "charcoal-leaf",
+      "name": "Charcoal leaf",
+      "group": "produce",
+      "ground": "#1B1B1A",
+      "ink": "#EFE9DD",
+      "accent": "#A8C07A",
+      "accent2": "#E0B25C",
+      "note": "dark and green without a gradient in sight",
+      "contrast": {
+        "ink": 14.26,
+        "accent": 8.61
+      }
+    },
+    {
+      "id": "forest-cream",
+      "name": "Forest cream",
+      "group": "neutral",
+      "ground": "#10201C",
+      "ink": "#EDE6D6",
+      "accent": "#E0B25C",
+      "accent2": "#C97B4A",
+      "note": "a deep forest ground for a considered announcement",
+      "contrast": {
+        "ink": 13.56,
+        "accent": 8.59
+      }
+    },
+    {
+      "id": "espresso-cream",
+      "name": "Espresso cream",
+      "group": "coffee",
+      "ground": "#241C17",
+      "ink": "#F3EADA",
+      "accent": "#D19A2A",
+      "accent2": "#C97B4A",
+      "note": "coffee dark, wheat accent",
+      "contrast": {
+        "ink": 14.03,
+        "accent": 6.67
+      }
+    },
+    {
+      "id": "ink-wheat",
+      "name": "Ink and wheat",
+      "group": "neutral",
+      "ground": "#1B2420",
+      "ink": "#F2ECE0",
+      "accent": "#C9922E",
+      "accent2": "#A8C07A",
+      "note": "the product's own two colours, for a record or a proof",
+      "contrast": {
+        "ink": 13.52,
+        "accent": 5.78
+      }
+    },
+    {
+      "id": "plum-dark",
+      "name": "Plum dark",
+      "group": "flowers",
+      "ground": "#251B21",
+      "ink": "#F2E9EC",
+      "accent": "#D9A441",
+      "accent2": "#C97B4A",
+      "note": "dark plum for flowers or preserves",
+      "contrast": {
+        "ink": 14.03,
+        "accent": 7.43
+      }
+    },
+    {
+      "id": "cold-press",
+      "name": "Cold press",
+      "group": "drinks",
+      "ground": "#1A2226",
+      "ink": "#EAF0EE",
+      "accent": "#D9A441",
+      "accent2": "#A8C07A",
+      "note": "juice and cold drinks; a cool ground with a warm accent",
+      "contrast": {
+        "ink": 13.99,
+        "accent": 7.18
+      }
+    },
+    {
+      "id": "butcher-paper",
+      "name": "Butcher paper",
+      "group": "meat",
+      "ground": "#F3EADF",
+      "ink": "#241C17",
+      "accent": "#9C4F27",
+      "accent2": "#6B7A3A",
+      "note": "for meat and dairy counters; warm and plain",
+      "contrast": {
+        "ink": 14.08,
+        "accent": 4.95
+      }
+    },
+    {
+      "id": "sun-bleached",
+      "name": "Sun bleached",
+      "group": "market",
+      "ground": "#F4EFE3",
+      "ink": "#2A241B",
+      "accent": "#A0562F",
+      "accent2": "#2F5D62",
+      "note": "a sign left in the sun; low contrast between ground and rule",
+      "contrast": {
+        "ink": 13.39,
+        "accent": 4.73
+      }
+    }
+  ]
+}

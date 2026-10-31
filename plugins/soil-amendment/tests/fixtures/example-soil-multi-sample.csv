@@ -1,0 +1,62 @@
+Report ID,E26-00-9999_EALT1_1,,,
+Client Sample ID:,,,,North Paddock,South Block,Deep Profile
+Sample Depth:,,,,15cm,150mm,45cm
+Crop ID:,,,,Example crop,Example crop,Example crop
+Sample Date:,,,,1 Jan 2026,1 Jan 2026,1 Jan 2026
+Sampled By:,,,,Synthetic,Synthetic,Synthetic
+Your Client:,,,,EXAMPLE FARM,EXAMPLE FARM,EXAMPLE FARM
+EAL Sample ID: ,,,,E26-00-9999-0001,E26-00-9999-0002,E26-00-9999-0003
+Parameter,Unit,Method Reference,LOR,---,---,---
+Soluble Calcium,mg/kg,** Inhouse S10,<10,2020,5450,1500
+Soluble Magnesium,mg/kg,** Inhouse S10,<1,382,719,150
+Soluble Potassium,mg/kg,** Inhouse S10,<25,168,520,90
+Soluble Phosphorus,mg/kg,** Inhouse S10,<1,6.3,86,3
+Nitrate-N - KCl extractable,mg/kg,** Inhouse S37,<0.1,5.6,47.8,2
+Ammonium-N - KCl extractable,mg/kg,** Inhouse S37,<0.1,1.6,3.8,9
+Mehlich Phosphorus,mg/kg,** Rayment & Lyons 18F1,<0.1,44.9,206,12
+Phosphorus - Bray 2,mg/kg,** Inhouse S3A,<1,87,310,20
+Sulfur - KCl extractable,mg/kg,** Inhouse S37,<1,6,17,4
+pH (H2O),units,Rayment & Lyons 4A1,---,6.65,7.57,8.1
+Electrical Conductivity,dS/m,Rayment & Lyons 3A1,<0.005,0.056,0.243,0.31
+Maximum Soil Chloride Estimate,mg/kg,** Calculation,---,36,156,198
+Exchangeable Calcium,cmol+/kg,** Rayment & Lyons 18F1,<0.05,10.4,23.8,24
+Exchangeable Calcium,kg/ha,** Rayment & Lyons 18F1,<22,5200,11900,12000
+Exchangeable Calcium,mg/kg,** Rayment & Lyons 18F1,<10,2080,4760,4800
+Exchangeable Magnesium,cmol+/kg,** Rayment & Lyons 18F1,<0.05,3.4,6.13,1.2
+Exchangeable Magnesium,kg/ha,** Rayment & Lyons 18F1,<22,1020,1839,360
+Exchangeable Magnesium,mg/kg,** Rayment & Lyons 18F1,<10,408,736,144
+Exchangeable Potassium,cmol+/kg,** Rayment & Lyons 18F1,<0.05,0.54,1.91,0.4
+Exchangeable Potassium,kg/ha,** Rayment & Lyons 18F1,<22,526.5,1862.2,390
+Exchangeable Potassium,mg/kg,** Rayment & Lyons 18F1,<10,211,745,156
+Exchangeable Sodium,cmol+/kg,** Rayment & Lyons 18F1,<0.05,0.14,0.29,1.6
+Exchangeable Sodium,kg/ha,** Rayment & Lyons 18F1,<22,80.5,166.7,920
+Exchangeable Sodium,mg/kg,** Rayment & Lyons 18F1,<10,32,67,368
+Aluminium - Exchangeable,cmol+/kg,** Calculations,<0.01,0.07,0.11,0.02
+Calcium,%,** Calculation,<0.01,67,74,86
+Magnesium,%,** Calculation,<0.01,22,19,4.3
+Potassium,%,** Calculation,<0.01,3.5,5.9,1.4
+Sodium - ESP,%,** Calculation,<0.01,0.9,0.9,5.7
+Hydrogen,%,** Calculation,---,6,0,2
+Other Bases,%,** Calculation,<0.01,0.4,0.3,0.5
+Calcium/Magnesium Ratio,Ratio,** Calculation,<0.01,3,3.9,20
+Total Cation Exchange Capacity,cmol+/kg,** Calculation,---,15.5,32.3,28
+Zinc - DTPA,mg/kg,Rayment & Lyons 12A1,<0.5,4.3,24.1,1.2
+Manganese - DTPA,mg/kg,Rayment & Lyons 12A1,<0.1,11.3,12.8,3
+Iron - DTPA,mg/kg,Rayment & Lyons 12A1,<0.5,67.8,97.3,40
+Copper - DTPA,mg/kg,Rayment & Lyons 12A1,<0.1,2.2,4.8,0.9
+Boron - CaCl2 extractable,mg/kg,** Rayment & Lyons 12C2,<0.1,0.43,0.95,0.2
+Silicon - CaCl2 extractable,mg/kg,** Inhouse S11,<1,35,61,20
+Carbon - Total,%,Inhouse S4a,<0.03,2.31,8.28,0.9
+Nitrogen - Total,%,Inhouse S4a,<0.02,0.18,0.55,0.08
+Estimated Organic Matter,%,Inhouse S4a,<0.04,4.05,14.5,1.6
+Paramagnetism,uCGS,** Paramagnetic Count Soil Meter,---,300,240,90
+Basic Texture,---,** Inhouse S65,---,Clay Loam,Clay Loam,Clay
+Basic Colour,---,** Inhouse S65,---,Brownish,Brownish,Grey
+Calcium,mg/kg,1:3 Nitric:HCl - ICPMS,<50,3200,11900,9000
+Magnesium,mg/kg,1:3 Nitric:HCl - ICPMS,<50,5850,4390,3990
+Phosphorus,mg/kg,1:3 Nitric:HCl - ICPMS,<50,582,1620,900
+Molybdenum,mg/kg,1:3 Nitric:HCl - ICPMS,<0.2,0.49,1.3,0.1
+Cobalt,mg/kg,1:3 Nitric:HCl - ICPMS,<0.05,20,19,5
+Boron,mg/kg,1:3 Nitric:HCl - ICPMS,<2,0.8,8.9,0.4
+Sulfur,mg/kg,1:3 Nitric:HCl - ICPMS,<50,247,812,100
+Zinc,mg/kg,1:3 Nitric:HCl - ICPMS,<1,70,122,45

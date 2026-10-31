@@ -1,0 +1,15 @@
+name: claims
+version: 0.1.0
+manifest_version: 2
+api_version: 1
+author: pantler
+license: MIT
+requires_hermes: ">=0.22.1"
+description: >-
+  Lint marketing copy for claims: health claims refused outright, certification and
+  environmental claims named with the record that would have to stand behind them, and
+  provenance and comparative claims flagged for substantiation. It reports; it never rewrites.
+tags: [marketing, claims, compliance, advertising, copy]
+provides_tools:
+  - claim_check
+config_schema: {}

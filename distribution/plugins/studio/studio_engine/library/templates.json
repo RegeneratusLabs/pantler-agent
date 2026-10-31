@@ -1,0 +1,311 @@
+{
+  "_note": "Eight card surfaces. `requires` is what the template cannot be drawn without; `needs` is what it can use. A template that can hold anything makes everything look the same, so each one has a job and an argument about where the eye goes.",
+  "templates": [
+    {
+      "id": "feed-square-day",
+      "name": "Day card",
+      "surface": "feed",
+      "sizes": [
+        [
+          1080,
+          1080
+        ]
+      ],
+      "needs": [
+        "eyebrow",
+        "headline",
+        "day",
+        "footer"
+      ],
+      "requires": [
+        "headline",
+        "day"
+      ],
+      "best_for": "a recurring day: market day, delivery day, bake day",
+      "note": "the headline sets the offer, the day line carries the when; one accent rule between them."
+    },
+    {
+      "id": "feed-square-list",
+      "name": "List card",
+      "surface": "feed",
+      "sizes": [
+        [
+          1080,
+          1080
+        ]
+      ],
+      "needs": [
+        "eyebrow",
+        "headline",
+        "items",
+        "footer"
+      ],
+      "requires": [
+        "headline",
+        "items"
+      ],
+      "best_for": "what is ready this week, up to six lines",
+      "note": "rows with a hairline between; an optional quantity or price after a vertical bar."
+    },
+    {
+      "id": "portrait-availability",
+      "name": "Availability portrait",
+      "surface": "feed",
+      "sizes": [
+        [
+          1080,
+          1350
+        ]
+      ],
+      "needs": [
+        "eyebrow",
+        "headline",
+        "items",
+        "footer"
+      ],
+      "requires": [
+        "headline",
+        "items"
+      ],
+      "best_for": "a longer availability list on a 4:5 post",
+      "note": "two columns above five items; the list is the composition, not a footnote."
+    },
+    {
+      "id": "story-announcement",
+      "name": "Story announcement",
+      "surface": "story",
+      "sizes": [
+        [
+          1080,
+          1920
+        ]
+      ],
+      "needs": [
+        "eyebrow",
+        "headline",
+        "day",
+        "footer"
+      ],
+      "requires": [
+        "headline"
+      ],
+      "best_for": "an announcement that has to survive the story chrome",
+      "note": "safe area reserved top and bottom; nothing important behind the profile row or the reply bar."
+    },
+    {
+      "id": "market-day",
+      "name": "Market day",
+      "surface": "feed",
+      "sizes": [
+        [
+          1080,
+          1080
+        ]
+      ],
+      "needs": [
+        "eyebrow",
+        "day",
+        "time",
+        "venue",
+        "headline",
+        "footer"
+      ],
+      "requires": [
+        "day",
+        "venue"
+      ],
+      "best_for": "a stall, a venue and a time, stated once",
+      "note": "the day is the message; the venue and time are the proof; no headline competition."
+    },
+    {
+      "id": "quote-card",
+      "name": "Quote card",
+      "surface": "feed",
+      "sizes": [
+        [
+          1080,
+          1350
+        ]
+      ],
+      "needs": [
+        "eyebrow",
+        "quote",
+        "attribution",
+        "footer"
+      ],
+      "requires": [
+        "quote"
+      ],
+      "best_for": "a customer's own words, with their permission",
+      "note": "the quote is set in the display serif and is allowed five lines; attribution is tracked capitals."
+    },
+    {
+      "id": "price-board",
+      "name": "Price board",
+      "surface": "feed",
+      "sizes": [
+        [
+          1080,
+          1350
+        ]
+      ],
+      "needs": [
+        "eyebrow",
+        "headline",
+        "items",
+        "price_note",
+        "footer"
+      ],
+      "requires": [
+        "headline",
+        "items"
+      ],
+      "best_for": "a retail or market price list, item and price per row",
+      "note": "rows are 'Item | $0.00'; prices are right-aligned and the rules do the comparing."
+    },
+    {
+      "id": "carousel-cover",
+      "name": "Carousel cover",
+      "surface": "feed",
+      "sizes": [
+        [
+          1080,
+          1350
+        ]
+      ],
+      "needs": [
+        "eyebrow",
+        "number",
+        "headline",
+        "footer"
+      ],
+      "requires": [
+        "headline"
+      ],
+      "best_for": "the first slide of a set, where the set needs a title",
+      "note": "a large numeral sits right; the headline holds the left column."
+    },
+    {
+      "id": "poster-a3",
+      "name": "A3 poster",
+      "surface": "print",
+      "sizes": [
+        [
+          3508,
+          4961
+        ]
+      ],
+      "print": {
+        "mm": [
+          297,
+          420
+        ],
+        "dpi": 300
+      },
+      "needs": [
+        "eyebrow",
+        "headline",
+        "day",
+        "time",
+        "venue",
+        "footer"
+      ],
+      "requires": [
+        "headline"
+      ],
+      "best_for": "a gate, window or stall poster, read at 2 m",
+      "note": "A3 portrait at 300 dpi; the headline is the poster, the day sits in the lower third."
+    },
+    {
+      "id": "sign-a3",
+      "name": "A3 sign",
+      "surface": "print",
+      "sizes": [
+        [
+          4961,
+          3508
+        ]
+      ],
+      "print": {
+        "mm": [
+          420,
+          297
+        ],
+        "dpi": 300
+      },
+      "needs": [
+        "eyebrow",
+        "day",
+        "time",
+        "venue",
+        "headline",
+        "footer"
+      ],
+      "requires": [
+        "day",
+        "venue"
+      ],
+      "best_for": "a stall sign read from the footpath at 3 m",
+      "note": "A3 landscape; the day is the design at roughly 90 mm caps, with venue and time under it."
+    },
+    {
+      "id": "menu-a4",
+      "name": "A4 menu",
+      "surface": "print",
+      "sizes": [
+        [
+          2480,
+          3508
+        ]
+      ],
+      "print": {
+        "mm": [
+          210,
+          297
+        ],
+        "dpi": 300
+      },
+      "needs": [
+        "eyebrow",
+        "headline",
+        "items",
+        "price_note",
+        "footer"
+      ],
+      "requires": [
+        "headline",
+        "items"
+      ],
+      "best_for": "a counter menu or a market price list, up to ten rows",
+      "note": "A4 portrait; prices right-aligned to one edge, one hairline under the title and none between dishes."
+    },
+    {
+      "id": "label-proof",
+      "name": "Label proof",
+      "surface": "print",
+      "sizes": [
+        [
+          1181,
+          1772
+        ]
+      ],
+      "print": {
+        "mm": [
+          100,
+          150
+        ],
+        "dpi": 300
+      },
+      "needs": [
+        "eyebrow",
+        "headline",
+        "footer"
+      ],
+      "requires": [
+        "headline"
+      ],
+      "best_for": "a 100 × 150 mm label front, before the particulars exist",
+      "note": "A proof only: it reserves the particulars block and reports each missing field as a placeholder. The particulars come from the labelling checklist."
+    }
+  ]
+}

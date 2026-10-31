@@ -1,0 +1,41 @@
+/* pantler — the two display instances, from the brand package.
+ *
+ * This is the four static blocks of `brand/font/fonts.css`, pointed at the canonical files in
+ * `brand/font/` so Vite hashes and serves them from this app. The variable file is deliberately
+ * not referenced: it is 119 KB (plus 147 KB italic) and nothing here needs another weight, while
+ * these two instances are 18 KB each.
+ *
+ * The instances are single-weight. Declaring the same file at 400 and 500 is what stops the
+ * browser synthesising a bold when a heading inherits `font-weight: 600`; `brand-display` also
+ * sets `font-synthesis: none` as the belt to that braces.
+ */
+
+@font-face {
+  font-family: 'Pantler Soft';
+  src: url('../../../brand/font/pantler-soft.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Pantler Soft';
+  src: url('../../../brand/font/pantler-soft.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pantler Soft Small';
+  src: url('../../../brand/font/pantler-softsmall.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Pantler Soft Small';
+  src: url('../../../brand/font/pantler-softsmall.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}

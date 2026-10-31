@@ -1,0 +1,41 @@
+name: spray
+version: 0.1.0
+manifest_version: 2
+api_version: 1
+author: pantler
+license: MIT
+requires_hermes: ">=0.22.1"
+description: >-
+  Record an application against the operator's own spray book: resolve the block and the
+  product, multiply the rate by the area, and date the earliest safe harvest from the
+  withholding period on file. The tool returns the record; the model writes the narrative.
+tags: [agriculture, spray, withholding, records, compliance]
+provides_tools:
+  - spray_record
+  - spray_inputs
+config_schema:
+  store_path:
+    type: str
+    default: ""
+    description: >-
+      Path to the records database the app writes. Defaults to records.db in HERMES_HOME, or
+      PANTLER_STORE in the environment. Without it the tool still computes, and says plainly
+      that nothing was written.
+  packs_dir:
+    type: str
+    default: ""
+    description: >-
+      Directory holding the installed packs, so the application record is validated against the
+      type that declares it. Defaults to PANTLER_PACKS, or packs/ beside HERMES_HOME.
+  custom_packs_dir:
+    type: str
+    default: ""
+    description: >-
+      Directory holding the operator's own record types, outside the distribution-owned packs/.
+      Defaults to custom-packs/ beside the profile, or PANTLER_CUSTOM_PACKS.
+  catalogue_path:
+    type: str
+    default: ""
+    description: >-
+      Path to the spray book JSON: the blocks and the inputs with their label facts. Defaults
+      to HERMES_HOME/spraybook.json, or PANTLER_SPRAYBOOK in the environment.

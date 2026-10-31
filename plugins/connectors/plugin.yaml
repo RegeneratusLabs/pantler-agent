@@ -1,0 +1,23 @@
+name: connectors
+version: 0.1.0
+manifest_version: 2
+api_version: 1
+author: pantler
+license: MIT
+requires_hermes: ">=0.22.1"
+description: >-
+  Use the apps the operator has connected through Composio. The service holds the key and the
+  connection; this plugin lets the assistant read through it and escalates every write to the
+  engine's human-approval gate before anything leaves the machine.
+tags: [connectors, composio, integrations, approval]
+provides_tools:
+  - connector_use
+provides_hooks:
+  - pre_tool_call
+config_schema:
+  bff_url:
+    type: str
+    default: "http://127.0.0.1:8650"
+    description: >-
+      Where the pantler BFF is listening. The connector service inside it holds the Composio key
+      and this profile's connector identity; the plugin only asks it.

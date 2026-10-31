@@ -1,0 +1,23 @@
+name: soil-amendment
+version: 1.0.0
+manifest_version: 2
+api_version: 1
+author: pantler
+license: MIT
+requires_hermes: ">=0.22.1"
+description: >-
+  Read an EAL soil certificate of analysis and return a structured soil amendment
+  program - base saturations, element deficits, product rates with annual caps, and
+  named rule codes. The tool returns data; the model writes the narrative.
+tags: [agriculture, soil, agronomy, lab-report, whitelabel]
+provides_tools:
+  - soil_amendment
+  - soil_test_read
+config_schema:
+  profile:
+    type: str
+    default: default
+    description: >-
+      Name of the profile to use (from the plugin's profiles/ directory), or an
+      absolute path to a profile JSON file. A profile carries the product table,
+      application ceilings, target levels, and rule wording.

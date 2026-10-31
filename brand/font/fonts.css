@@ -1,0 +1,61 @@
+/* pantler — webfonts
+   Two static instances of Fraunces, baked at the brand settings, plus the
+   variable original if you need other weights.
+
+   Paths assume this file sits in brand/font/ and is served from there.
+   Copy the .woff2 files next to your CSS if your build pipelines them. */
+
+/* ---- display: wordmark, page titles, headings (use at 28px and up) ---- */
+@font-face {
+  font-family: 'Pantler Soft';
+  src: url('pantler-soft.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Pantler Soft';
+  src: url('pantler-soft.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---- small display: 16-24px only ---- */
+@font-face {
+  font-family: 'Pantler Soft Small';
+  src: url('pantler-softsmall.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Pantler Soft Small';
+  src: url('pantler-softsmall.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---- optional: the variable file, if the UI needs other weights ----
+   Only load this if you actually use it; it is 120KB against 18KB per instance. */
+@font-face {
+  font-family: 'Fraunces Variable';
+  src: url('fraunces-variable.woff2') format('woff2-variations');
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Fraunces Variable';
+  src: url('fraunces-italic.woff2') format('woff2-variations');
+  font-weight: 300 900;
+  font-style: italic;
+  font-display: swap;
+}
+/* .fraunces-try { font-family:'Fraunces Variable', Georgia, serif;
+                   font-variation-settings:'opsz' 144,'wght' 500,'SOFT' 100,'WONK' 0; } */
+
+/* NOTE: the two static files are single-weight. Declaring them at 400 and 500
+   stops the browser faking bold when something inherits font-weight: 600.
+   If you need real 600+, use the variable file and set 'wght'. */

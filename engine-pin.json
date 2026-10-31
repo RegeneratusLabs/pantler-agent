@@ -1,0 +1,11 @@
+{
+  "tag": "v0.22.1",
+  "commit": "297552a9d646119871391d202509822cd86330df",
+  "tag_object": "28106ea1a3230177edb30a0a4e8a099d839bbc2f",
+  "channel": "stable",
+  "released": "2026-10-14",
+  "previous": {
+    "tag": "v0.21.4+canary",
+    "commit": "13dc3a73895aff1f823c1566bc1dd9b52fe35b65"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "_note": "Three page archetypes and six section kinds. A page is an argument, not a layout: the blueprint fixes the order and the required parts, and the generator refuses a page with no way to buy. Section kinds are deliberately few — a producer has three true facts, not nine features.",
+  "kinds": {
+    "opening": "The one line that says what this is and who it is for, with the action beside it. Exactly one per page, and it carries the h1.",
+    "list": "Three to six things that are ready or for sale. No invented prices: a line is 'Produce — detail' or plain words.",
+    "text": "One short paragraph in the operator's own voice. No adjectives they would not say at the stall.",
+    "proof": "Two to four facts somebody could check: a certificate, a market day, a weight, a supplier.",
+    "contact": "Where and how to reach them: market, address, phone, email — only the ones supplied.",
+    "action": "The one thing the page asks for. Rendered as a button in the opening and again at the end."
+  },
+  "blueprints": [
+    {
+      "id": "producer",
+      "name": "The producer's page",
+      "sections": ["opening", "list", "text", "proof", "contact"],
+      "requires": ["opening", "contact"],
+      "best_for": "a farm, a market garden, a maker with a place and a story"
+    },
+    {
+      "id": "order",
+      "name": "The order page",
+      "sections": ["opening", "list", "action", "contact"],
+      "requires": ["opening", "action"],
+      "best_for": "a box scheme, a delivery business, anything bought ahead"
+    },
+    {
+      "id": "stall",
+      "name": "The stall page",
+      "sections": ["opening", "contact", "list"],
+      "requires": ["opening", "contact"],
+      "best_for": "a market stall: where you will be, when, and what is coming"
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "_note": "Fictitious demo data for golden conversations. The 10% rate is illustrative only and is NOT a claim about any jurisdiction — the design notes invariant 1 requires the operator to configure their own rate. Copy this file to the profile root as pricebook.json.",
+  "currency": "AUD",
+  "tax_label": "GST",
+  "tax_rate_bp": 1000,
+  "customers": [
+    {
+      "id": "CUST-001",
+      "name": "Bellview CSA",
+      "aliases": ["Bellview Community Supported Agriculture", "the CSA"],
+      "email": "orders@bellview-csa.example",
+      "terms_days": 14
+    },
+    {
+      "id": "CUST-002",
+      "name": "Bellview Farm Shop",
+      "aliases": ["the farm shop"],
+      "email": "shop@bellview.example",
+      "terms_days": 7
+    },
+    {
+      "id": "CUST-003",
+      "name": "Marong Road Cafe",
+      "aliases": ["Marong Cafe", "the cafe"],
+      "email": "chef@marongroad.example",
+      "terms_days": 30
+    }
+  ],
+  "items": [
+    {
+      "id": "ITM-001",
+      "name": "Green Beans",
+      "unit": "kg",
+      "unit_price_cents": 1200,
+      "aliases": ["beans", "green bean"]
+    },
+    {
+      "id": "ITM-002",
+      "name": "Eggs",
+      "unit": "dozen",
+      "unit_price_cents": 900,
+      "aliases": ["eggs", "dozen eggs"]
+    },
+    {
+      "id": "ITM-003",
+      "name": "Zucchini",
+      "unit": "kg",
+      "unit_price_cents": 800,
+      "aliases": ["courgette", "courgettes", "zucchinis"]
+    },
+    {
+      "id": "ITM-004",
+      "name": "Cherry Tomatoes",
+      "unit": "punnet",
+      "unit_price_cents": 450,
+      "aliases": ["cherry toms", "tomatoes"]
+    },
+    {
+      "id": "ITM-005",
+      "name": "Cos Lettuce",
+      "unit": "each",
+      "unit_price_cents": 350,
+      "aliases": ["lettuce", "cos"]
+    },
+    {
+      "id": "ITM-006",
+      "name": "Mixed Salad Box",
+      "unit": "box",
+      "unit_price_cents": 2800,
+      "aliases": ["salad box", "salad boxes"]
+    }
+  ]
+}

@@ -1,0 +1,136 @@
+name: CI
+
+# Every gate in one workflow (the internal capability plan §3, item A5). Each job runs through
+# ./scripts/test.sh, so CI and a developer run the same commands: this file is scheduling,
+# not a second implementation that drifts from the first.
+#
+# Actions are pinned to full commit SHAs, checked against the GitHub API on 2026-10-19 with the
+# major tag each one was on. A major tag is mutable: a retagged or compromised action runs in
+# every job and can tamper with the tree and the npm cache, so the pin is the commit and the
+# trailing comment is only a label for the reader (the internal security audit A19-SC-6).
+# the skills and plugins notes §10.3 names zizmor and pinact for keeping these fresh; Dependabot
+# bumps the comment and the SHA together.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# A newer run of the same ref replaces an older one: this is a gate, and only its newest
+# answer is worth reading.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    name: python — seam, kernel, BFF, plugins
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          # 3.11 is the floor core/pyproject.toml promises (`requires-python = ">=3.11"`),
+          # so it is the one version worth testing: code that needs 3.12 fails here rather
+          # than in an operator's install.
+          python-version: "3.11"
+      # The kernel and BFF suites, every plugin suite, and scripts/check-seam.py. The seam
+      # check runs in this job rather than the engine one because it is an assertion about
+      # Python source: it needs an interpreter and nothing else, whereas the engine job on a
+      # runner has no gateway — a check placed there would always skip.
+      - run: ./scripts/test.sh python
+
+  engine:
+    name: engine — pin and tool surface
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.11"
+      # What this job skips on a runner, and why that is honest rather than a gap:
+      #
+      # * engine-pin.sh asserts that engine-pin.json parses and that any engine tree it can
+      #   find is at the pin. A runner has no .hermes-dev/src/hermes-agent, no
+      #   ~/.hermes/hermes-agent and no user systemd unit, so each of the three checks
+      #   reports "absent — skipped". The pin is a relation between two checkouts on a
+      #   developer's machine; with neither present there is nothing that can disagree with
+      #   it. What is still proven here is that the pin file is well formed and that the
+      #   assertion tolerates an absent engine instead of failing on one.
+      # * toolset-check.py needs a gateway at 8644 and exits 3 without one; test.sh maps 3
+      #   to a skip. Invariant 3 stays a local and release-time assertion, not a runner one:
+      #   standing it up would mean bootstrapping a pinned engine checkout to compare a
+      #   surface against a live gateway. A job that passed because it did nothing while
+      #   claiming coverage would be the dishonesty this comment exists to avoid.
+      #
+      # It stays a job of its own so both skips are visible in the run summary rather than
+      # buried in a long green log.
+      - run: ./scripts/test.sh engine
+
+  web:
+    name: web — typecheck and unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          # The dev box runs Node 24 and both tools accept that line: vite wants
+          # ^20.19 || >=22.12, vitest ^22.12 || ^24 || >=26.
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: app/web/package-lock.json
+      # A PR controls this lockfile and `npm ci` runs lifecycle scripts by default, so a
+      # dependency's `postinstall` would run before vitest/tsc judge the tree. Nothing in this
+      # closure needs a build step (the internal security audit A19-SC-5).
+      - run: npm ci --ignore-scripts
+        working-directory: app/web
+      - run: ./scripts/test.sh web
+
+  licences:
+    name: licences — the npm closure
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      # osv-scanner is a static binary, so it is fetched and checksum-verified rather than
+      # installed through a package manager. Its licence data comes from the deps.dev API,
+      # which is why this step needs the network: the allowlist below is only as current as
+      # that API. The Python closure is empty by construction — core/pyproject.toml declares
+      # `dependencies = []`, the BFF and the plugins are standard library only, and
+      # scripts/check-seam.py proves the imports — so app/web's lockfile is the whole surface.
+      - name: Install osv-scanner
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/osv-scanner" \
+            https://github.com/google/osv-scanner/releases/download/v2.7.0/osv-scanner_linux_amd64
+          echo "160c6253e2922e9e0a6a9771c5c4c40a4b3c6090b34a3cdd5e80c96cc2e4218b  $RUNNER_TEMP/osv-scanner" | sha256sum -c -
+          chmod +x "$RUNNER_TEMP/osv-scanner"
+          echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
+      # The allowlist, in SPDX identifiers, with the reason for each part of it:
+      #
+      #   MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause   the repository rule's own list, and
+      #       the bulk of the npm closure.
+      #   ISC, 0BSD, Unlicense, CC0-1.0   trivially permissive, and a large share of the npm
+      #       closure once dev tooling lands (knip is ISC). A gate that fails on these gets
+      #       switched off within a week, which is the failure mode that matters here.
+      #   MPL-2.0   the one exception, and it is deliberate. lightningcss and its platform
+      #       binaries — 24 lockfile entries, pulled in by vite directly and by
+      #       @tailwindcss/node behind @tailwindcss/vite, all of them build-time — are
+      #       MPL-2.0. MPL-2.0 is file-level copyleft: it attaches to the covered source
+      #       files, never to the minified CSS they emit, so nothing copyleft reaches the
+      #       shipped bundle. That argument is the one the skills and plugins notes §10.1
+      #       already makes in prose; writing it down here is what makes it reviewable. The
+      #       cost is honest to state: a new MPL-2.0 package would also pass, so adding one is
+      #       a review item rather than a build failure. The alternative was a job that is red
+      #       on the day it lands.
+      #
+      # GPL, AGPL, LGPL and anything else absent from this list fail the build. That is the
+      # invariant which cannot be repaired after a release: an import can be refactored and a
+      # drifted skill re-synced, but a copyleft dependency that reached a shipped artefact
+      # cannot be taken back. osv-scanner answers licences, known vulnerabilities and
+      # deprecated packages in one pass with one exit code, and no flag asks for licences
+      # alone, so this job is the closure's dependency health as well.
+      - name: Allowlist over the npm closure
+        run: >-
+          osv-scanner --licenses="MIT,Apache-2.0,BSD-2-Clause,BSD-3-Clause,ISC,0BSD,Unlicense,CC0-1.0,MPL-2.0"
+          app/web

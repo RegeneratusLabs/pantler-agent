@@ -1,0 +1,81 @@
+# A contract fixture, not a product feature — and not in `packs/`.
+#
+# It used to sit in `packs/`, which is the directory the BFF loads by default, so the development
+# app offered a `note` record type and a "Notes" screen that no part of the product defines. It
+# lives outside the shipped root now: `packs/` is what an operator gets, `packs-fixtures/` is what
+# the contract is tested against (the internal audit PACK-1).
+#
+# It exists so the pack contract in the front-end design §3 is proved end to end — the
+# BFF can load it, the shell can render it, and the store can hold it — without putting a
+# domain back at the centre of the work. The real packs are ordered in the design notes §8 — `farm`
+# first, then `money`, `production` and `orders` — and each will look much like this.
+#
+# It is also the worked example for anyone writing a pack: every field kind the shell must
+# render appears below, and `id_sequence` shows how a pack gets durable sequential ids
+# rather than a counter it keeps in memory (the internal backend audit §1.2).
+
+id = "example"
+name = "Example"
+version = "0.1.0"
+description = "A fixture pack that exercises the whole contract. Not a product feature."
+
+[[records]]
+type = "note"
+label = "Note"
+plural = "Notes"
+title_field = "title"
+# NOTE-0001, NOTE-0002 … allocated from the store, so they survive a restart.
+id_prefix = "NOTE"
+id_sequence = true
+
+  [[records.fields]]
+  name = "title"
+  label = "Title"
+  kind = "text"
+  required = true
+
+  [[records.fields]]
+  name = "body"
+  label = "Detail"
+  kind = "longtext"
+
+  [[records.fields]]
+  name = "kind"
+  label = "Kind"
+  kind = "enum"
+  options = ["observation", "task", "question"]
+  help = "What sort of note this is."
+
+  [[records.fields]]
+  name = "paddock"
+  label = "Paddock"
+  kind = "text"
+
+  [[records.fields]]
+  name = "due"
+  label = "Due"
+  kind = "date"
+
+  [[records.fields]]
+  name = "quantity"
+  label = "Quantity"
+  kind = "number"
+
+  [[records.fields]]
+  name = "cost"
+  label = "Cost"
+  kind = "money"
+
+  [[records.fields]]
+  name = "follows"
+  label = "Follows"
+  kind = "reference"
+  reference = "note"
+  help = "Another note this one continues from."
+
+[[screens]]
+id = "notes"
+title = "Notes"
+kind = "list"
+record_type = "note"
+columns = ["title", "kind", "paddock", "due"]

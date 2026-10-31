@@ -1,0 +1,198 @@
+{
+  "_note": "Ten pairings, four licensed families. Each role is a job, not a preference: the display face carries the one line, the text face carries the list, the label face carries the tracked capitals and the numbers. Tracking is in ems and is set here so the renderer never guesses it.",
+  "pairings": [
+    {
+      "id": "young-serif-barlow",
+      "display": {
+        "family": "young-serif",
+        "weight": 400,
+        "tracking": -0.012
+      },
+      "text": {
+        "family": "barlow",
+        "weight": 400,
+        "tracking": 0.0
+      },
+      "label": {
+        "family": "barlow",
+        "weight": 600,
+        "tracking": 0.14
+      },
+      "note": "the house pairing: a warm serif over a plain grotesque. Works for a card, a menu and a sign."
+    },
+    {
+      "id": "young-serif-mono",
+      "display": {
+        "family": "young-serif",
+        "weight": 400,
+        "tracking": -0.012
+      },
+      "text": {
+        "family": "barlow",
+        "weight": 400,
+        "tracking": 0.0
+      },
+      "label": {
+        "family": "plex-mono",
+        "weight": 500,
+        "tracking": 0.12
+      },
+      "note": "the serif plus a typewriter label; reads as a label on a jar."
+    },
+    {
+      "id": "condensed-serif",
+      "display": {
+        "family": "barlow-condensed",
+        "weight": 700,
+        "tracking": -0.006
+      },
+      "text": {
+        "family": "young-serif",
+        "weight": 400,
+        "tracking": 0.0
+      },
+      "label": {
+        "family": "plex-mono",
+        "weight": 400,
+        "tracking": 0.12
+      },
+      "note": "a tall condensed headline over a reading serif; the poster pairing."
+    },
+    {
+      "id": "condensed-grotesk",
+      "display": {
+        "family": "barlow-condensed",
+        "weight": 700,
+        "tracking": -0.008
+      },
+      "text": {
+        "family": "barlow",
+        "weight": 400,
+        "tracking": 0.0
+      },
+      "label": {
+        "family": "barlow",
+        "weight": 600,
+        "tracking": 0.16
+      },
+      "note": "loud and plain: a market board with no serif in sight.",
+      "scale": 1.06
+    },
+    {
+      "id": "barlow-only",
+      "display": {
+        "family": "barlow",
+        "weight": 600,
+        "tracking": -0.018
+      },
+      "text": {
+        "family": "barlow",
+        "weight": 400,
+        "tracking": 0.0
+      },
+      "label": {
+        "family": "barlow",
+        "weight": 500,
+        "tracking": 0.16
+      },
+      "note": "one family, three weights: the modern-grocer card."
+    },
+    {
+      "id": "barlow-mono",
+      "display": {
+        "family": "barlow",
+        "weight": 700,
+        "tracking": -0.02
+      },
+      "text": {
+        "family": "barlow",
+        "weight": 400,
+        "tracking": 0.0
+      },
+      "label": {
+        "family": "plex-mono",
+        "weight": 400,
+        "tracking": 0.1
+      },
+      "note": "a heavy grotesque with a typewriter label; dates and quantities read as data."
+    },
+    {
+      "id": "mono-serif",
+      "display": {
+        "family": "plex-mono",
+        "weight": 500,
+        "tracking": 0.0
+      },
+      "text": {
+        "family": "young-serif",
+        "weight": 400,
+        "tracking": 0.0
+      },
+      "label": {
+        "family": "plex-mono",
+        "weight": 400,
+        "tracking": 0.1
+      },
+      "note": "a technical headline over a warm body: the apothecary, the certificate, the record.",
+      "scale": 0.62
+    },
+    {
+      "id": "serif-only",
+      "display": {
+        "family": "young-serif",
+        "weight": 400,
+        "tracking": -0.012
+      },
+      "text": {
+        "family": "young-serif",
+        "weight": 400,
+        "tracking": 0.0
+      },
+      "label": {
+        "family": "barlow",
+        "weight": 600,
+        "tracking": 0.16
+      },
+      "note": "all serif, for a quote or an announcement where the words are the design."
+    },
+    {
+      "id": "condensed-mono",
+      "display": {
+        "family": "barlow-condensed",
+        "weight": 600,
+        "tracking": -0.004
+      },
+      "text": {
+        "family": "barlow",
+        "weight": 400,
+        "tracking": 0.0
+      },
+      "label": {
+        "family": "plex-mono",
+        "weight": 500,
+        "tracking": 0.12
+      },
+      "note": "chalkboard energy without a chalk font: tall caps and a mono label.",
+      "scale": 1.06
+    },
+    {
+      "id": "grotesk-serif",
+      "display": {
+        "family": "barlow",
+        "weight": 700,
+        "tracking": -0.02
+      },
+      "text": {
+        "family": "young-serif",
+        "weight": 400,
+        "tracking": 0.0
+      },
+      "label": {
+        "family": "barlow",
+        "weight": 500,
+        "tracking": 0.16
+      },
+      "note": "the blunt headline with a reading serif under it; a producer's own voice."
+    }
+  ]
+}

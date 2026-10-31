@@ -1,0 +1,154 @@
+# The money pack: invoices, durably.
+#
+# The second real pack (the design notes §8), and the one the invoice tools have been waiting for. Until it
+# existed, a draft lived in the conversation's memory: the *number* was reserved in the store
+# (the internal backend audit §1.2) but the draft itself was gone when the process was, so the operator
+# could not see, correct or send an invoice they had asked for
+# (the internal audit PLUG-1, PLUG-14).
+#
+# Two record types rather than one, because the kernel's field kinds are flat: an invoice is a
+# header and a list of lines, and a line is a record that references its invoice. That is also
+# what makes the arithmetic checkable — the header's totals are the sum of the lines it points at,
+# and a line can be corrected without rewriting the header.
+#
+# Money is integer cents, in the pack as in the kernel. `subtotal_cents` and friends are `money`
+# fields because that is what they are; a float would be a rounding error waiting for a tax rate.
+
+id = "money"
+name = "Money"
+version = "0.1.0"
+description = "Invoices: what was sold, to whom, for how much. Drafts first, and nothing sends itself."
+
+[[records]]
+type = "invoice"
+label = "Invoice"
+plural = "Invoices"
+# The number, not the customer: two invoices for one customer are the common case, and the number
+# is what the operator quotes on the phone.
+title_field = "number"
+# INV-0001, INV-0002 … allocated from the store, so a number is never issued twice — the same
+# sequence the ledger reserves from, which is what keeps one invoice from having two numbers.
+id_prefix = "INV"
+id_sequence = true
+
+  [[records.fields]]
+  name = "number"
+  label = "Number"
+  kind = "text"
+  required = true
+  help = "The invoice number, as it will appear on the invoice. Reserved before the draft exists."
+
+  [[records.fields]]
+  name = "customer"
+  label = "Customer"
+  kind = "text"
+  required = true
+  help = "Who it is for, as they are named in the price book."
+
+  [[records.fields]]
+  name = "date"
+  label = "Date"
+  kind = "date"
+  help = "The date it was written. Empty for a draft that has not been dated yet."
+
+  [[records.fields]]
+  name = "status"
+  label = "Status"
+  kind = "enum"
+  options = ["draft", "sent", "paid", "void"]
+  help = "A draft has not been sent. Nothing in this plugin sends one — that is the operator's act."
+
+  [[records.fields]]
+  name = "currency"
+  label = "Currency"
+  kind = "text"
+  help = "The currency the figures are in, as the price book states it."
+
+  [[records.fields]]
+  name = "tax_label"
+  label = "Tax label"
+  kind = "text"
+  help = "What the jurisdiction calls it — GST, VAT, sales tax. Named on the invoice."
+
+  [[records.fields]]
+  name = "subtotal_cents"
+  label = "Subtotal (cents)"
+  kind = "money"
+  help = "The sum of the lines, before tax. Integer cents."
+
+  [[records.fields]]
+  name = "tax_cents"
+  label = "Tax (cents)"
+  kind = "money"
+  help = "Integer cents. Zero when no rate is configured — which the draft says out loud."
+
+  [[records.fields]]
+  name = "total_cents"
+  label = "Total (cents)"
+  kind = "money"
+  help = "Subtotal plus tax, in integer cents."
+
+  [[records.fields]]
+  name = "notes"
+  label = "Notes"
+  kind = "longtext"
+
+[[records]]
+type = "invoice_line"
+label = "Invoice line"
+plural = "Invoice lines"
+title_field = "description"
+
+  [[records.fields]]
+  name = "invoice"
+  label = "Invoice"
+  kind = "reference"
+  reference = "invoice"
+  required = true
+  help = "The invoice this line belongs to."
+
+  [[records.fields]]
+  name = "position"
+  label = "Position"
+  kind = "number"
+  help = "The order it appears in on the invoice."
+
+  [[records.fields]]
+  name = "description"
+  label = "Description"
+  kind = "text"
+  required = true
+  help = "What was sold, as the price book names it."
+
+  [[records.fields]]
+  name = "quantity"
+  label = "Quantity"
+  kind = "number"
+  required = true
+
+  [[records.fields]]
+  name = "unit"
+  label = "Unit"
+  kind = "text"
+  help = "The pricing unit: kg, punnet, dozen."
+
+  [[records.fields]]
+  name = "unit_price_cents"
+  label = "Unit price (cents)"
+  kind = "money"
+  required = true
+  help = "Integer cents, from the price book. Never invented."
+
+  [[records.fields]]
+  name = "amount_cents"
+  label = "Amount (cents)"
+  kind = "money"
+  required = true
+  help = "Quantity times unit price, in integer cents."
+
+[[screens]]
+id = "invoices"
+title = "Invoices"
+kind = "list"
+record_type = "invoice"
+columns = ["number", "customer", "date", "status", "total_cents"]

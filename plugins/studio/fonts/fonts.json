@@ -1,0 +1,40 @@
+{
+  "_note": "Every face here is SIL Open Font License 1.1, bundled with its licence file in LICENSES/. A face that is not listed here cannot be used by design_render: the renderer refuses an unlicensed family rather than falling back to whatever the machine has installed. That is what stops a card being set in a font the operator cannot legally use in a paid product.",
+  "families": {
+    "young-serif": {
+      "name": "Young Serif",
+      "licence": "OFL-YoungSerif.txt",
+      "source": "google/fonts ofl/youngserif",
+      "role": "display serif — warm, editorial, food-friendly"
+    },
+    "barlow": {
+      "name": "Barlow",
+      "licence": "OFL-Barlow.txt",
+      "source": "google/fonts ofl/barlow",
+      "role": "grotesque — body, lists, buttons, signs"
+    },
+    "barlow-condensed": {
+      "name": "Barlow Condensed",
+      "licence": "OFL-BarlowCondensed.txt",
+      "source": "google/fonts ofl/barlowcondensed",
+      "role": "condensed — posters, price boards, big headlines"
+    },
+    "plex-mono": {
+      "name": "IBM Plex Mono",
+      "licence": "OFL-IBMPlexMono.txt",
+      "source": "google/fonts ofl/ibmplexmono",
+      "role": "mono — labels, codes, prices, small caps"
+    }
+  },
+  "faces": [
+    {"id": "young-serif-400", "family": "young-serif", "weight": 400, "file": "YoungSerif-Regular.ttf"},
+    {"id": "barlow-400", "family": "barlow", "weight": 400, "file": "Barlow-Regular.ttf"},
+    {"id": "barlow-500", "family": "barlow", "weight": 500, "file": "Barlow-Medium.ttf"},
+    {"id": "barlow-600", "family": "barlow", "weight": 600, "file": "Barlow-SemiBold.ttf"},
+    {"id": "barlow-700", "family": "barlow", "weight": 700, "file": "Barlow-Bold.ttf"},
+    {"id": "barlow-condensed-600", "family": "barlow-condensed", "weight": 600, "file": "BarlowCondensed-SemiBold.ttf"},
+    {"id": "barlow-condensed-700", "family": "barlow-condensed", "weight": 700, "file": "BarlowCondensed-Bold.ttf"},
+    {"id": "plex-mono-400", "family": "plex-mono", "weight": 400, "file": "IBMPlexMono-Regular.ttf"},
+    {"id": "plex-mono-500", "family": "plex-mono", "weight": 500, "file": "IBMPlexMono-Medium.ttf"}
+  ]
+}
