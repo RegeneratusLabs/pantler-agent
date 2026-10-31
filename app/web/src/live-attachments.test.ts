@@ -15,6 +15,7 @@
  */
 
 import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { parseTurn } from '@shared/attachments'
 import { BffClient } from './seam/bff'
@@ -22,7 +23,11 @@ import { SeamClient } from './seam/client'
 import { applyFrame, createRunState, displayText, type RunState } from './seam/reducer'
 
 const live = process.env.PANTLER_LIVE === '1'
-const ENV_FILE = '/home/you/projects/pantler/.hermes-dev/profiles/pantler/.env'
+// The dev profile's key file, relative to this file so a fresh clone can run the suite with
+// PANTLER_LIVE=1. `PANTLER_ENV_FILE` overrides it for a profile installed elsewhere.
+const ENV_FILE =
+  process.env.PANTLER_ENV_FILE ??
+  fileURLToPath(new URL('../../../.hermes-dev/profiles/pantler/.env', import.meta.url))
 const BASE_URL = process.env.PANTLER_API ?? 'http://127.0.0.1:8644'
 const BFF_URL = process.env.PANTLER_BFF ?? 'http://127.0.0.1:8650'
 const PROFILE = process.env.PANTLER_PROFILE ?? 'pantler'

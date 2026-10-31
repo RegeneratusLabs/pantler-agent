@@ -468,7 +468,11 @@ class PreviewHttpTest(unittest.TestCase):
             headers={"Range": "bytes=99999-"},
         )
         self.assertEqual(status, 416)
-        self.assertEqual(headers["Content-Range"], f"bytes */{len(b'customer,qty\nBellview,12\n')}")
+        # Python 3.11 — the floor core/pyproject.toml promises — refuses a backslash inside an
+        # f-string expression; PEP 701 relaxed that in 3.12, which is why this only fails on a
+        # runner. The size is computed outside the format string for that reason, not for style.
+        payload = b"customer,qty\nBellview,12\n"
+        self.assertEqual(headers["Content-Range"], f"bytes */{len(payload)}")
 
     def test_a_path_outside_the_roots_is_refused_with_a_sentence(self) -> None:
         status, body, _ = self.request("GET", "/api/files/raw?path=" + quote("/etc/hostname"))

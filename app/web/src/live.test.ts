@@ -16,6 +16,7 @@
  */
 
 import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { classifyToolResult, parseInvoiceDraft } from '@shared/pack'
 import type { ApprovalChoice, RunEvent } from '@shared/wire'
@@ -23,7 +24,11 @@ import { SeamClient } from './seam/client'
 import { applyFrame, createRunState, displayText, type RunState } from './seam/reducer'
 
 const live = process.env.PANTLER_LIVE === '1'
-const ENV_FILE = '/home/you/projects/pantler/.hermes-dev/profiles/pantler/.env'
+// The dev profile's key file, relative to this file so a fresh clone can run the suite with
+// PANTLER_LIVE=1. `PANTLER_ENV_FILE` overrides it for a profile installed elsewhere.
+const ENV_FILE =
+  process.env.PANTLER_ENV_FILE ??
+  fileURLToPath(new URL('../../../.hermes-dev/profiles/pantler/.env', import.meta.url))
 const BASE_URL = process.env.PANTLER_API ?? 'http://127.0.0.1:8644'
 // The host gateway answers on `/p/<name>/`; the bare route is the default profile, which has no
 // pantler plugins. Derived from the key file's profile in scripts/golden.py the same way.
@@ -110,8 +115,13 @@ async function runTurn(
 describe.runIf(live)('live: the Phase 0 definition of done', () => {
   // When the dev server supplies the key through the proxy, the client can hold nothing —
   // which is exactly the browser's situation. Set PANTLER_CLIENT_KEY='' to exercise it.
-  const clientKey =
-    process.env.PANTLER_CLIENT_KEY !== undefined ? process.env.PANTLER_CLIENT_KEY : apiKey()
+  // `describe.runIf` still runs this callback to collect the tests, so the key is only read when
+  // the suite will actually run: a runner has no dev profile and no key file, and must skip.
+  const clientKey = !live
+    ? ''
+    : process.env.PANTLER_CLIENT_KEY !== undefined
+      ? process.env.PANTLER_CLIENT_KEY
+      : apiKey()
   const client = new SeamClient({ baseUrl: BASE_URL, apiKey: clientKey, profile: PROFILE })
   const session = (name: string) => `live-${name}-${Date.now().toString(16)}`
 
