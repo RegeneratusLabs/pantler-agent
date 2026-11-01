@@ -10,7 +10,8 @@
 # instead — see profile_distribution.py:343-353.
 
 name: pantler
-version: 0.0.5
+# 0.0.2 is the last release. 0.0.3 is the next product release; these commits are unreleased.
+version: 0.0.2
 description: pantler — the personal assistant harness for a small food business, run conversationally.
 author: pantler
 license: MIT

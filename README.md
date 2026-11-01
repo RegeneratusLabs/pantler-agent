@@ -139,7 +139,7 @@ business with a price book, so the invoice tools have something to read before y
 
 ## Status
 
-**Early release, 0.0.5.** The assistant works end to end and the test suites are green, but this is
+**Early release, 0.0.2.** The assistant works end to end and the test suites are green, but this is
 still an early cut: paths will change, and records written today are worth copying somewhere safe
 until automatic backup lands.
 
