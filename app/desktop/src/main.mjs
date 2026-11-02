@@ -11,7 +11,6 @@
  */
 
 import { app, BrowserWindow, dialog } from 'electron'
-import { autoUpdater } from 'electron-updater'
 import { writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
@@ -85,7 +84,7 @@ const UPDATE_INTERVAL_MS = 6 * 60 * 60 * 1000
  * installer is code-signed, an update is an unsigned download Windows will interrupt, and a feed
  * we do not sign is a code path we do not control. `PANTLER_UPDATE_FEED` points a test at a stub.
  */
-function startUpdates() {
+async function startUpdates() {
   if (!app.isPackaged) {
     trace('updates: skipped (not a packaged build)')
     return
@@ -94,6 +93,12 @@ function startUpdates() {
     trace('updates: off (PANTLER_UPDATES is not 1)')
     return
   }
+  // electron-updater is CommonJS: `autoUpdater` is a getter on `module.exports`, which the ESM
+  // loader cannot see as a named export. `import { autoUpdater }` therefore throws while the
+  // module graph is still linking — before `boot` and before the window — and the installed app
+  // never opens (v0.0.3 shipped exactly that). Take the CommonJS default, and take it here
+  // rather than at the top so a broken updater can only turn updates off.
+  const { autoUpdater } = (await import('electron-updater')).default
   const feed = (process.env.PANTLER_UPDATE_FEED || '').trim()
   if (feed) {
     autoUpdater.setFeedURL({ provider: 'generic', url: feed })
@@ -225,7 +230,11 @@ async function boot() {
   }
 
   createWindow(`http://127.0.0.1:${bffPort}`)
-  startUpdates()
+  // Updates are optional. A failure to load or check them is a trace line, never a dead window:
+  // the app has already booted, and the only thing that should change is that updates are off.
+  await startUpdates().catch(error =>
+    trace(`updates: unavailable ${error?.message ?? error}`)
+  )
 }
 
 function fail(error) {

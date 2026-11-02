@@ -12,7 +12,7 @@
 name: pantler
 # The current public release. A docs, brand or CI-only push is not a release and is not
 # tagged (the status page, "Public release").
-version: 0.0.3
+version: 0.0.4
 description: pantler — the personal assistant harness for a small food business, run conversationally.
 author: pantler
 license: MIT

@@ -110,6 +110,54 @@ jobs:
           npm ci
           npm run build:win
 
+      # A release page is a promise that the download starts. v0.0.3 built, attached and shipped
+      # an installer whose main process failed to link before `boot`: the page was live and the
+      # app could not open. "The builder produced a file" is not "it starts", so the artifact is
+      # installed and booted once here, headless, before it is attached. This is the same check
+      # the private Windows gate runs (`.github/workflows/windows.yml`, the installer job).
+      - name: Install silently and prove it starts
+        shell: pwsh
+        run: |
+          $setup = Get-ChildItem app\desktop\release\Pantler-Setup-*.exe | Select-Object -First 1
+          if (-not $setup) { throw "the installer was not produced" }
+          Write-Host "installer: $($setup.FullName) ($([math]::Round($setup.Length / 1MB)) MB)"
+          $install = Start-Process -FilePath $setup.FullName -ArgumentList "/S" -PassThru
+          if (-not $install.WaitForExit(900000)) {
+            $install.Kill()
+            throw "the installer did not finish in fifteen minutes"
+          }
+          if ($install.ExitCode -ne 0) { throw "the installer exited $($install.ExitCode)" }
+          # The installation directory is electron-builder's choice; find the app, do not assume it.
+          $exe = Get-ChildItem "$env:LOCALAPPDATA" -Depth 3 -Filter "pantler.exe" -File -ErrorAction SilentlyContinue |
+            Select-Object -First 1 -ExpandProperty FullName
+          if (-not $exe) { throw "the install produced no pantler.exe under %LOCALAPPDATA%" }
+          Write-Host "installed: $exe"
+
+          # The smoke run boots the engine and the BFF and writes the marker before opening a
+          # window; a link error, a missing payload or a bad port fails here, not on the operator's
+          # machine.
+          $env:PANTLER_SMOKE = "1"
+          $marker = Join-Path $env:APPDATA "pantler\smoke-ok"
+          Remove-Item $marker -ErrorAction SilentlyContinue
+          $process = Start-Process -FilePath $exe -PassThru
+          $deadline = (Get-Date).AddMinutes(3)
+          while (-not (Test-Path $marker) -and (Get-Date) -lt $deadline) {
+            Start-Sleep -Seconds 2
+            if ($process.HasExited -and -not (Test-Path $marker)) { break }
+          }
+          if (-not (Test-Path $marker)) {
+            $logs = Join-Path $env:APPDATA "pantler\logs"
+            Write-Host "--- boot trace"
+            if (Test-Path (Join-Path $logs "boot-trace.log")) { Get-Content (Join-Path $logs "boot-trace.log") }
+            Write-Host "--- logs"
+            if (Test-Path $logs) { Get-ChildItem $logs | ForEach-Object { Write-Host "--- $($_.Name)"; Get-Content $_ -Tail 60 } }
+            $errorFile = Join-Path $env:APPDATA "pantler\boot-error.txt"
+            if (Test-Path $errorFile) { Write-Host "--- boot error"; Get-Content $errorFile }
+            throw "the app did not reach the smoke marker — do not attach this installer"
+          }
+          Write-Host "smoke: engine and BFF came up"
+          if (-not $process.WaitForExit(30000)) { $process.Kill() }
+
       - name: Attach the installer and its update metadata
         shell: pwsh
         env:

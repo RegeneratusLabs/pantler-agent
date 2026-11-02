@@ -2,7 +2,7 @@
   "name": "pantler-desktop",
   "productName": "pantler",
   "private": true,
-  "version": "0.0.3",
+  "version": "0.0.4",
   "type": "module",
   "description": "pantler's desktop host: the same web bundle, with the engine and the BFF supervised.",
   "main": "src/main.mjs",

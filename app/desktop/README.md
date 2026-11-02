@@ -79,10 +79,17 @@ The check is **off unless the build is packaged and `PANTLER_UPDATES=1`**. Until
 code-signed, an update is an unsigned download Windows will interrupt, and a feed we do not sign is
 a code path we do not control. `PANTLER_UPDATE_FEED` points a test at a stub feed.
 
+`electron-updater` is CommonJS and exposes `autoUpdater` as a getter on `module.exports`, which the
+ESM loader cannot see as a named export. `import { autoUpdater } from 'electron-updater'` therefore
+throws while the main module links — before `boot` — and the installed app shows "A JavaScript
+error occurred in the main process" instead of opening. v0.0.3 shipped exactly that. Import the
+CommonJS default inside `startUpdates`, never at the top of `main.mjs`, so a broken updater can only
+turn updates off; `test/update-config.test.mjs` holds the shape.
+
 To ship an update: bump `distribution/distribution.yaml` **and** `app/desktop/package.json` (the
 release job refuses a mismatch), write `export/release-notes/vX.Y.Z.md`, run
-`scripts/export-public.sh` (which tags the public commit), and the public release workflow builds
-and attaches the new installer and `latest.yml`.
+`scripts/export-public.sh` (which tags the public commit), and the public release workflow installs
+the installer it just built, boots it headless, and only then attaches it and `latest.yml`.
 
 ## Not here yet
 
