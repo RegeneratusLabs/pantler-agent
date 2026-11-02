@@ -10,7 +10,7 @@
  * (the desktop notes §3–4).
  */
 
-import { app, BrowserWindow, dialog } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import { writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
@@ -25,11 +25,17 @@ import {
   waitForJson
 } from './paths.mjs'
 import { Supervisor } from './supervisor.mjs'
+import { createUpdater } from './updates.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const supervisor = new Supervisor()
 let mainWindow = null
 let shuttingDown = false
+// What the engine was started with. `restartEngine` reuses it: the API key and port are decided
+// once, and a restart must not move them out from under the BFF.
+let engineRuntime = null
+// Set once the updater is built. `null` is "not available in this build", answered as disabled.
+let updates = null
 // Loaded in `boot`: a packaged build reads the identity from `resources/identity`, because the
 // module lives outside `app/desktop` and cannot be inside the asar's own relative tree.
 let identity = null
@@ -77,62 +83,156 @@ function createWindow(url) {
   mainWindow.loadURL(url)
 }
 
-const UPDATE_INTERVAL_MS = 6 * 60 * 60 * 1000
+/**
+ * The updater's state, mirrored for the window.
+ *
+ * `null` until `startUpdates` runs; `disabled` is the honest answer for a development build or a
+ * machine that opted out. The renderer reads it on mount and then follows the broadcasts.
+ */
+let updateState = null
+
+function disabledUpdateState() {
+  return {
+    status: 'disabled',
+    currentVersion: app.getVersion(),
+    version: null,
+    percent: null,
+    error: null,
+    checkedAt: null
+  }
+}
+
+function broadcastUpdate(state) {
+  updateState = state
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send('pantler:update-state', state)
+  }
+}
 
 /**
- * The update check. Off unless the build is packaged and the machine opted in: until the
- * installer is code-signed, an update is an unsigned download Windows will interrupt, and a feed
- * we do not sign is a code path we do not control. `PANTLER_UPDATE_FEED` points a test at a stub.
+ * The update check. On for a packaged build unless the machine opts out with
+ * `PANTLER_UPDATES=0`; `PANTLER_UPDATE_FEED` points a test at a stub.
+ *
+ * The controller stops the engine and the BFF before the installer runs. They execute from the
+ * directory the installer replaces, and Windows will not replace a running binary — without that
+ * order the update installs nothing and leaves the old version in place.
+ *
+ * `electron-updater` is CommonJS: `autoUpdater` is a getter on `module.exports`, which the ESM
+ * loader cannot see as a named export. `import { autoUpdater }` therefore throws while the module
+ * graph is still linking — before `boot` and before the window — and the installed app never
+ * opens (v0.0.3 shipped exactly that). Take the CommonJS default, and take it here rather than at
+ * the top so a broken updater can only turn updates off.
  */
 async function startUpdates() {
   if (!app.isPackaged) {
     trace('updates: skipped (not a packaged build)')
+    broadcastUpdate(disabledUpdateState())
     return
   }
-  if (process.env.PANTLER_UPDATES !== '1') {
-    trace('updates: off (PANTLER_UPDATES is not 1)')
+  if (process.env.PANTLER_UPDATES === '0') {
+    trace('updates: off (PANTLER_UPDATES=0)')
+    broadcastUpdate(disabledUpdateState())
     return
   }
-  // electron-updater is CommonJS: `autoUpdater` is a getter on `module.exports`, which the ESM
-  // loader cannot see as a named export. `import { autoUpdater }` therefore throws while the
-  // module graph is still linking — before `boot` and before the window — and the installed app
-  // never opens (v0.0.3 shipped exactly that). Take the CommonJS default, and take it here
-  // rather than at the top so a broken updater can only turn updates off.
-  const { autoUpdater } = (await import('electron-updater')).default
+
+  let autoUpdater
+  try {
+    autoUpdater = (await import('electron-updater')).default.autoUpdater
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    trace(`updates: unavailable ${message}`)
+    broadcastUpdate({ ...disabledUpdateState(), status: 'error', error: message })
+    return
+  }
+
   const feed = (process.env.PANTLER_UPDATE_FEED || '').trim()
   if (feed) {
     autoUpdater.setFeedURL({ provider: 'generic', url: feed })
     trace(`updates: feed ${feed}`)
   }
-  autoUpdater.autoDownload = true
-  autoUpdater.autoInstallOnAppQuit = true
   autoUpdater.logger = {
     info: message => trace(`updates: ${message}`),
     warn: message => trace(`updates: warn ${message}`),
     error: message => trace(`updates: error ${message}`),
     debug: () => {}
   }
-  for (const event of [
-    'checking-for-update',
-    'update-available',
-    'update-not-available',
-    'update-downloaded',
-    'error'
-  ]) {
-    autoUpdater.on(event, payload => {
-      const detail =
-        payload instanceof Error ? payload.message : payload ? JSON.stringify(payload) : ''
-      trace(`updates: ${event}${detail ? ` ${detail}` : ''}`)
-    })
-  }
-  const check = () =>
-    autoUpdater
-      .checkForUpdatesAndNotify()
-      .catch(error => trace(`updates: check failed ${error?.message ?? error}`))
-  check()
-  const timer = setInterval(check, UPDATE_INTERVAL_MS)
-  if (typeof timer?.unref === 'function') timer.unref()
+
+  updates = createUpdater({
+    updater: autoUpdater,
+    stopChildren: () => supervisor.stopAll(),
+    onState: broadcastUpdate,
+    trace,
+    currentVersion: app.getVersion()
+  })
+  updates.start()
+  broadcastUpdate(updates.snapshot())
 }
+
+ipcMain.handle('pantler:update-state', () => updateState ?? disabledUpdateState())
+
+ipcMain.handle('pantler:update-check', async () => {
+  if (!updates) return disabledUpdateState()
+  return updates.check()
+})
+
+ipcMain.handle('pantler:update-install', async event => {
+  if (!mainWindow || event.sender !== mainWindow.webContents) {
+    return { ok: false, error: 'This request did not come from the Pantler window.' }
+  }
+  if (!updates) return { ok: false, error: 'Updates are not available in this build.' }
+  return updates.install()
+})
+
+/**
+ * Start the engine child. Called at boot and again when a model is connected in the app: the key
+ * is written to the profile's `.env`, and the engine reads that file when the gateway starts.
+ */
+function startEngine() {
+  if (!engineRuntime) throw new Error('the engine has not been configured')
+  const spec = engineRuntime
+  supervisor.start(
+    'engine',
+    spec.bin,
+    [...spec.prefix, '-p', spec.paths.profile, 'gateway', 'run'],
+    {
+      env: engineEnvironment(spec.paths, process.env, spec.port),
+      cwd: spec.paths.engineHome
+    }
+  )
+}
+
+/**
+ * Stop and start the engine, then wait until it answers again. The BFF keeps its own URL and key,
+ * so it does not need restarting; only the engine does, and only because `.env` is read at start.
+ */
+async function restartEngine() {
+  if (!engineRuntime) return { ok: false, error: 'The engine has not started yet.' }
+  trace('engine: restart requested')
+  // `restart`, not stop-then-start: the supervisor keeps the child's command and environment, and
+  // `start` refuses a name it already knows.
+  await supervisor.restart('engine')
+  await waitForJson(`http://127.0.0.1:${engineRuntime.port}/v1/capabilities`, {
+    headers: { Authorization: `Bearer ${engineRuntime.key}` },
+    timeoutMs: 120_000
+  })
+  trace('engine: restarted')
+  return { ok: true }
+}
+
+ipcMain.handle('pantler:restart-engine', async event => {
+  // Only the window we created may ask. The bridge is exposed to the page, and a page that is not
+  // ours has no business stopping a child process.
+  if (!mainWindow || event.sender !== mainWindow.webContents) {
+    return { ok: false, error: 'This request did not come from the Pantler window.' }
+  }
+  try {
+    return await restartEngine()
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    trace(`engine: restart failed ${message}`)
+    return { ok: false, error: message }
+  }
+})
 
 async function boot() {
   identity = await loadIdentity()
@@ -175,16 +275,9 @@ async function boot() {
   // point `PANTLER_ENGINE_BIN` at the mirror's own `hermes` launcher instead.
   const engineBin = process.env.PANTLER_ENGINE_BIN || paths.python
   const enginePrefix = process.env.PANTLER_ENGINE_BIN ? [] : [paths.launcher]
+  engineRuntime = { bin: engineBin, prefix: enginePrefix, paths, port: enginePort, key }
   trace(`boot: engine ${engineBin} ${[...enginePrefix, '-p', paths.profile, 'gateway', 'run'].join(' ')}`)
-  supervisor.start(
-    'engine',
-    engineBin,
-    [...enginePrefix, '-p', paths.profile, 'gateway', 'run'],
-    {
-      env: engineEnvironment(paths, process.env, enginePort),
-      cwd: paths.engineHome
-    }
-  )
+  startEngine()
   // The shipped profile carries `gateway.standalone: true`, so its API server answers on the
   // bare route; the `/p/<name>/` shape belongs to the host multiplexer the dev box runs.
   await waitForJson(`http://127.0.0.1:${enginePort}/v1/capabilities`, {

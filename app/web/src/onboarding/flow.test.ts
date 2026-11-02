@@ -7,8 +7,16 @@ import { TOUR } from './tour'
 import { exampleAsks } from '../chat/examples'
 
 describe('the first run', () => {
-  it('asks six questions in a fixed order', () => {
-    expect(STEPS.map(step => step.id)).toEqual(['welcome', 'business', 'voice', 'apps', 'tour', 'done'])
+  it('asks seven questions in a fixed order', () => {
+    expect(STEPS.map(step => step.id)).toEqual([
+      'welcome',
+      'business',
+      'voice',
+      'apps',
+      'tour',
+      'model',
+      'done'
+    ])
   })
 
   it('walks forward to the end and then stops', () => {
@@ -28,12 +36,14 @@ describe('the first run', () => {
   it('goes back the way it came, and the first step has nowhere to go back to', () => {
     expect(previousStep('welcome')).toBeNull()
     expect(previousStep('business')).toBe('welcome')
-    expect(previousStep('done')).toBe('tour')
+    expect(previousStep('model')).toBe('tour')
+    expect(previousStep('done')).toBe('model')
   })
 
   it('counts progress from one, for the people reading it', () => {
-    expect(progressOf('welcome')).toEqual({ index: 1, total: 6 })
-    expect(progressOf('done')).toEqual({ index: 6, total: 6 })
+    expect(progressOf('welcome')).toEqual({ index: 1, total: 7 })
+    expect(progressOf('model')).toEqual({ index: 6, total: 7 })
+    expect(progressOf('done')).toEqual({ index: 7, total: 7 })
     expect(stepIndex('voice')).toBe(2)
   })
 

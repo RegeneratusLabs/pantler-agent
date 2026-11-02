@@ -1,5 +1,5 @@
 /**
- * The six step bodies. Copy first, controls second — the words are most of the design here.
+ * The seven step bodies. Copy first, controls second — the words are most of the design here.
  *
  * Every claim on these screens has to be true of *this build*, which is why the apps step says the
  * connections are not switched on yet (`pages/connectors.ts` — nothing is wired) and why the closing
@@ -7,13 +7,16 @@
  * oversells is a first run that teaches the operator not to trust the rest.
  */
 
+import { useQueryClient } from '@tanstack/react-query'
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router'
 import { Check, Copy, ExternalLink } from 'lucide-react'
 import { identity } from '@identity'
 import { PantlerMark } from '../brand/PantlerMark'
+import { ModelForm } from '../model/ModelForm'
 import { CONNECTOR_PLATFORM } from '../pages/connectors'
 import { connectorsToShow } from './apps'
+import { qk, useApp, useEngineSettings } from '../state/app-context'
 import { Button } from '../ui/button'
 import { Field, Input } from '../ui/field'
 import { ChoiceCard, ChoiceGroup, SampleLine, StepFrame, SummaryRow } from './kit'
@@ -42,6 +45,8 @@ export function StepBody({ step, ...props }: StepProps & { step: StepId }) {
       return <AppsStep {...props} />
     case 'tour':
       return <TourStep {...props} />
+    case 'model':
+      return <ModelStep {...props} />
     case 'done':
       return <DoneStep {...props} />
   }
@@ -77,7 +82,7 @@ function WelcomeStep() {
         </ul>
         <p className="text-xs text-ink-3">
           Next you’ll tell me who you are, how you’d like me to sound, and where the apps you use will
-          live. Six short steps — and you can stop at any point.
+          live. Seven short steps — and you can stop at any point.
         </p>
       </StepFrame>
     </div>
@@ -270,6 +275,58 @@ function AskToCopy({ ask }: { ask: string }) {
         {copied ? 'Copied' : 'Copy'}
       </Button>
     </li>
+  )
+}
+
+// --------------------------------------------------------------------- model
+
+/**
+ * The one technical step, and the last before the first task.
+ *
+ * The installer carries the engine but not a model, so this is where the operator brings the one
+ * thing it cannot: a provider key. It is skippable — Settings has the same form — but the first
+ * task cannot run without it, so the screen says plainly what it is for and where the key goes.
+ */
+function ModelStep({ go }: StepProps) {
+  const { data: settings, isPending, error } = useEngineSettings()
+  const { bff } = useApp()
+  const queryClient = useQueryClient()
+
+  return (
+    <StepFrame
+      eyebrow="Almost there"
+      title="Connect a model"
+      lede="Pantler runs on your machine, but the model that answers is one you bring. Pantler does not include a model subscription or pay for the calls."
+    >
+      <p className="text-sm leading-relaxed text-ink-2">
+        Choose a provider and paste its key. The key is written to this profile on this machine and
+        never shown again. No key yet? Skip this and add one from Settings → Advanced later.
+      </p>
+
+      {isPending ? (
+        <p className="text-sm text-ink-3">Reading this install’s settings…</p>
+      ) : error ? (
+        <p
+          role="alert"
+          className="rounded-card border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger"
+        >
+          Could not read this install’s settings.{' '}
+          {error instanceof Error ? ` ${error.message}` : ''}
+        </p>
+      ) : settings?.available ? (
+        <ModelForm
+          settings={settings}
+          bff={bff}
+          compact
+          onSaved={() => void queryClient.invalidateQueries({ queryKey: qk.settings })}
+          onConnected={() => go('done')}
+        />
+      ) : (
+        <p className="text-sm text-ink-3">
+          {settings?.reason ?? 'This install has no profile to write a key to.'}
+        </p>
+      )}
+    </StepFrame>
   )
 }
 

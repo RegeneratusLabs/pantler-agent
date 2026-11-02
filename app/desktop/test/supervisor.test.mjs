@@ -135,3 +135,22 @@ test('stopAll stops every child', async () => {
     ['stopped', 'stopped']
   )
 })
+
+test('restart stops and spawns the same child again, keeping its command', async () => {
+  const { supervisor, children } = harness()
+  supervisor.start('engine', 'hermes', ['-p', 'pantler', 'gateway', 'run'])
+  await supervisor.restart('engine')
+
+  assert.equal(children.length, 2)
+  assert.deepEqual(children[1].args, ['-p', 'pantler', 'gateway', 'run'])
+  assert.equal(children[1].command, 'hermes')
+  assert.equal(children[0].child.signals.at(-1), 'SIGTERM')
+  assert.equal(supervisor.status().engine.state, 'running')
+  // Its restart budget starts over: a deliberate restart is not a crash loop.
+  assert.equal(supervisor.status().engine.restarts, 0)
+})
+
+test('restarting a name that is not running is refused', async () => {
+  const { supervisor } = harness()
+  await assert.rejects(() => supervisor.restart('engine'), /not started/)
+})

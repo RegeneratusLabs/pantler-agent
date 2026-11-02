@@ -122,6 +122,22 @@ export class Supervisor {
     if (typeof record.timer?.unref === 'function') record.timer.unref()
   }
 
+  /**
+   * Stop a child and start the same one again, keeping its record — the command, environment and
+   * log are decided once. `start` refuses a name it already knows, so a restart has to be its own
+   * verb rather than stop-then-start from outside.
+   */
+  async restart(name, options) {
+    const record = this.children.get(name)
+    if (!record) throw new Error(`supervisor: ${name} is not started`)
+    await this.stop(name, options)
+    record.stopping = false
+    record.restarts = 0
+    record.state = 'starting'
+    this.#spawn(record)
+    return record
+  }
+
   /** Stop one child (or every child) and wait for it to exit. No restart is scheduled after this. */
   async stop(name, { graceMs = 5_000 } = {}) {
     const record = this.children.get(name)

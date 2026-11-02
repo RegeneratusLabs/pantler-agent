@@ -42,7 +42,7 @@ test('the updater is loaded as CommonJS, lazily, not as a named export', () => {
   )
   assert.match(
     main,
-    /const\s*\{\s*autoUpdater\s*\}\s*=\s*\(await import\(['"]electron-updater['"]\)\)\.default/
+    /\(await import\(['"]electron-updater['"]\)\)\.default\.autoUpdater/
   )
 })
 

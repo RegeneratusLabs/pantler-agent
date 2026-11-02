@@ -11,6 +11,22 @@ const shared = fileURLToPath(new URL('../shared/src', import.meta.url))
 const identity = fileURLToPath(new URL('../identity/identity.mjs', import.meta.url))
 
 /**
+ * The product version, read from the same manifest the release job checks the installer against.
+ * The About tab shows it; a `define` keeps the YAML out of the bundle and out of the server.
+ */
+const appVersion = (() => {
+  try {
+    const manifest = readFileSync(
+      new URL('../../distribution/distribution.yaml', import.meta.url),
+      'utf8'
+    )
+    return /^version:\s*(\S+)/m.exec(manifest)?.[1] ?? 'dev'
+  } catch {
+    return 'dev'
+  }
+})()
+
+/**
  * Where the app listens, and where it forwards the engine's API.
  *
  * Both are environment-driven so that reaching the app from another device is a command,
@@ -484,6 +500,9 @@ export function guardProxy(options: ProxyGuardOptions): Plugin {
 }
 
 export default defineConfig({
+  define: {
+    __PANTLER_VERSION__: JSON.stringify(appVersion)
+  },
   plugins: [
     react(),
     tailwindcss(),

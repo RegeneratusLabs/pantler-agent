@@ -1,9 +1,11 @@
 /**
  * The shape of the first run: which questions, in what order, and what counts as finished.
  *
- * Six steps, and the order is the argument. Who they are, then how they want to be spoken to, then
+ * Seven steps, and the order is the argument. Who they are, then how they want to be spoken to, then
  * what we may reach — each answer is used by the step after it, and the last step is not a
- * congratulations screen but the first thing to actually do.
+ * congratulations screen but the first thing to actually do. The model step sits immediately
+ * before that first task: nothing can answer without it, but asking for a provider key before
+ * showing anyone the product is a worse first run.
  *
  * Pure data and pure functions, so the order can be asserted without rendering anything
  * (`flow.test.ts`), and so the page itself stays presentational.
@@ -16,7 +18,7 @@
 
 import type { OperatorProfile } from './profile'
 
-export type StepId = 'welcome' | 'business' | 'voice' | 'apps' | 'tour' | 'done'
+export type StepId = 'welcome' | 'business' | 'voice' | 'apps' | 'tour' | 'model' | 'done'
 
 export interface Step {
   id: StepId
@@ -28,6 +30,7 @@ export const STEPS: Step[] = [
   { id: 'voice' },
   { id: 'apps' },
   { id: 'tour' },
+  { id: 'model' },
   { id: 'done' }
 ]
 

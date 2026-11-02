@@ -5,7 +5,9 @@ import { PantlerMark } from '../brand/PantlerMark'
 import { PresenceProvider, useMascotState } from '../state/presence'
 import { cn } from '../ui/cn'
 import { EngineNotice } from './EngineNotice'
+import { ModelNotice } from './ModelNotice'
 import { Sidebar } from './Sidebar'
+import { UpdateNotice } from './UpdateNotice'
 
 /** The rail is a slide-over below this width; a fixed column above it. */
 const RAIL_WIDTH = 'w-[17.5rem]'
@@ -112,6 +114,8 @@ function ShellChrome() {
         </header>
 
         <EngineNotice />
+        <ModelNotice />
+        <UpdateNotice />
 
         <main className="flex min-h-0 flex-1 flex-col">
           <Outlet />

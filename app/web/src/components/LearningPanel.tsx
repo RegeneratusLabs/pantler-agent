@@ -9,11 +9,11 @@
  * want to look at something rather than do something. The moment-to-moment half of it is in the
  * conversation itself (`LearningCard`, and the strip under a turn).
  *
- * **Two disclosures, and they are different questions.** The first is the plain one: what it
- * remembers, what it has written for itself, what it has rewritten, and when it last tidied up.
- * The second is the engine's raw ledger — one line per skill write, with the session that caused
- * it — which is evidence rather than information, and belongs behind Advanced for the same reason
- * the engine's other toolsets do.
+ * **One disclosure here, and one behind Advanced.** The plain one is what it remembers, what it
+ * has written for itself, what it has rewritten, and when it last tidied up. The engine's raw
+ * ledger — one line per skill write, with the session that caused it — is evidence rather than
+ * information, so it lives in Settings → Advanced as `LearningChangeLog`, beside the rest of the
+ * settings most people never need.
  *
  * **It is read-only, and it says so.** The engine's memory, curator and node-mutation routes are
  * on its dashboard and TUI surfaces, not the seam this app uses (`app/server/learning.py` argues
@@ -109,15 +109,29 @@ export function LearningPanel() {
           with the tools it already has.
         </p>
       </Disclosure>
-
-      <Disclosure
-        icon={<History className="size-4" />}
-        title="Advanced — the change log"
-        hint={`${(data.ledger ?? []).length} recorded ${(data.ledger ?? []).length === 1 ? 'change' : 'changes'}`}
-      >
-        <LearningLog ledger={data.ledger ?? []} />
-      </Disclosure>
     </div>
+  )
+}
+
+/**
+ * The engine's raw ledger, for Settings → Advanced.
+ *
+ * It is the same data the panel reads (`useLearning`), rendered on its own so the Learning tab is
+ * about what the assistant knows, not how the bookkeeping works. The count in the summary is the
+ * honest measure of how much has changed.
+ */
+export function LearningChangeLog() {
+  const { data } = useLearning()
+  const changes = (data?.ledger ?? []).length
+
+  return (
+    <Disclosure
+      icon={<History className="size-4" />}
+      title="The change log"
+      hint={`${changes} recorded ${changes === 1 ? 'change' : 'changes'}`}
+    >
+      <LearningLog ledger={data?.ledger ?? []} />
+    </Disclosure>
   )
 }
 
