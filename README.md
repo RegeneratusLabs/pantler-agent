@@ -38,9 +38,9 @@ middle: the only thing that leaves your computer is the model call you configure
 | **The thing you said this morning** | A sentence is kept the moment you say it — your words and the day — and becomes the typed record when there is one. It does not wait for a form |
 | **Cards, posters and a one-page site** | A written brief becomes a measured design: margins, type sizes, line breaks, safe zones and contrast computed in code, with a starter brand if you have none |
 
-Twenty-five skills ship in the box, and nine plugins give the assistant its hands: records, soil
-amendments, spray, availability, claims, consent, connectors, the profile guard and the design
-studio.
+Twenty-six skills ship in the box, and ten plugins give the assistant its hands: records, soil
+amendments, spray, availability, claims, consent, connectors, the profile guard, the design studio
+and the office suite.
 
 ## A look inside
 
@@ -89,9 +89,32 @@ other's workspace, records or credentials.
 
 ## Getting started
 
-You need **Python 3.11 or newer**, **Node 24**, and the [Hermes](https://github.com/NousResearch/hermes-agent)
-engine — the open-source agent runtime Pantler is built on. Pantler pins one commit of it, so the
-behaviour you test is the behaviour that ships.
+### Install it on Windows
+
+Download **[`Pantler-Setup-0.0.4.exe`](https://github.com/RegeneratusLabs/pantler-agent/releases/latest)**
+and run it. It installs for your user alone — no administrator prompt — and opens like any other
+Windows app.
+
+There is nothing else to install. The installer is self-contained:
+
+- **the engine** — Hermes at the commit `engine-pin.json` names, source only, with no git history;
+- **a Python runtime**, and every package the engine, the kernel and the office tools import;
+- **the app** — the shell, the BFF, the packs, the skills and the distribution;
+- **a profile template** — the first run copies it into `%APPDATA%\pantler`.
+
+The install runs no package manager (no `pip`, `npm` or `uv`) and needs no other installer. It does
+not need Python, Node, git or Hermes to be on the machine first.
+
+The build is not code-signed yet, so the first launch shows *Windows protected your PC*: choose
+**More info → Run anyway**. Records, conversations and credentials live in `%APPDATA%\pantler`,
+outside the program, so reinstalling or updating keeps them.
+
+### Run it from source
+
+For development, or on macOS and Linux. You need **Python 3.11 or newer**, **Node 24**, and the
+[Hermes](https://github.com/NousResearch/hermes-agent) engine — the open-source agent runtime
+Pantler is built on. Pantler pins one commit of it, so the behaviour you test is the behaviour that
+ships.
 
 ```sh
 # 1. The engine, at the pinned commit (a tag can move; the commit cannot).
@@ -132,8 +155,21 @@ business with a price book, so the invoice tools have something to read before y
 
 ## Requirements, honestly
 
-- **Your own model key.** Pantler does not pay for inference and does not proxy it for you.
-- **A local machine that can run the engine.** This is a desktop-class tool, not a hosted service.
+**For the installed app**
+
+- **Windows 10 or 11, 64-bit.** The installer is per-user and asks for no administrator rights.
+- **About 290 MB to download.** The installed app is larger: it carries the engine and its Python
+  runtime.
+- **Your own model key.** Pantler does not pay for inference and does not proxy it for you; the
+  installer bundles the software, not a model subscription.
+
+**For the source checkout**
+
+- **Python 3.11+, Node 24 and git**, plus the Hermes engine at the pinned commit (see Getting
+  started).
+
+**Either way**
+
 - **The skills lean Australian.** Organic certification, labelling and retention rules cite
   Australian frameworks. The structure travels; the citations do not.
 
