@@ -476,7 +476,8 @@ class BodyDrainTests(HttpCase):
             connection.sendall(b"GET /api/health HTTP/1.1\r\nHost: h\r\n\r\n")
             try:
                 following = connection.recv(65536)
-            except (ConnectionResetError, BrokenPipeError):
+            except (ConnectionResetError, BrokenPipeError, ConnectionAbortedError):
+                # Windows reports a peer close as WSAECONNABORTED rather than a reset.
                 following = b""
             self.assertTrue(
                 following == b"" or following.startswith(b"HTTP/1.1 200"),

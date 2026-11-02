@@ -36,6 +36,11 @@ jobs:
           # so it is the one version worth testing: code that needs 3.12 fails here rather
           # than in an operator's install.
           python-version: "3.11"
+      # The office plugin's format layer needs its pinned libraries, or its 27
+      # document-level tests skip on the runner and pass only on a dev box that happens to
+      # have them. Installed before the suites so a skip is never mistaken for coverage.
+      - name: Office format layer
+        run: python -m pip install --disable-pip-version-check -r plugins/office/requirements.txt
       # The kernel and BFF suites, every plugin suite, and scripts/check-seam.py. The seam
       # check runs in this job rather than the engine one because it is an assertion about
       # Python source: it needs an interpreter and nothing else, whereas the engine job on a
@@ -89,16 +94,22 @@ jobs:
       - run: ./scripts/test.sh web
 
   licences:
-    name: licences — the npm closure
+    name: licences — the npm and Python closures
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       # osv-scanner is a static binary, so it is fetched and checksum-verified rather than
       # installed through a package manager. Its licence data comes from the deps.dev API,
       # which is why this step needs the network: the allowlist below is only as current as
-      # that API. The Python closure is empty by construction — core/pyproject.toml declares
-      # `dependencies = []`, the BFF and the plugins are standard library only, and
-      # scripts/check-seam.py proves the imports — so app/web's lockfile is the whole surface.
+      # that API.
+      #
+      # There are two closures now, not one. `app/web`'s lockfile is the npm side. The Python
+      # side is no longer empty by construction: `core/pyproject.toml` still declares
+      # `dependencies = []` and `scripts/check-seam.py` still proves the kernel, but the office
+      # plugin's format layer vendors the engine's MIT office scripts and needs the libraries
+      # they import — pinned exactly in `plugins/office/requirements.txt` (MIT, BSD-2, BSD-3 and
+      # PSF; licences recorded in its PROVENANCE.md). That file is scanned here so a new
+      # package, or a moved licence, is a build failure rather than a surprise in an installer.
       - name: Install osv-scanner
         run: |
           curl -fsSL -o "$RUNNER_TEMP/osv-scanner" \
@@ -138,3 +149,7 @@ jobs:
         run: >-
           osv-scanner --licenses="MIT,MIT-0,Apache-2.0,BSD-2-Clause,BSD-3-Clause,ISC,0BSD,BlueOak-1.0.0,Unlicense,CC0-1.0,MPL-2.0"
           app/web
+      - name: Allowlist over the office plugin's Python closure
+        run: >-
+          osv-scanner --licenses="MIT,MIT-0,Apache-2.0,BSD-2-Clause,BSD-3-Clause,ISC,0BSD,BlueOak-1.0.0,Unlicense,CC0-1.0,PSF-2.0,MIT-CMU"
+          plugins/office

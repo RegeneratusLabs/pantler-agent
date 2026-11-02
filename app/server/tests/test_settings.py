@@ -501,6 +501,10 @@ class ProfileTestCase(unittest.TestCase):
 
     # -- writing .env ------------------------------------------------------
 
+    @unittest.skipIf(
+        sys.platform == "win32",
+        "POSIX permission bits; Windows has no 0600 and the file is owner-only by its own rules",
+    )
     def test_set_key_writes_a_value_and_tightens_permissions(self) -> None:
         self.profile.set_key("OPENCODE_GO_API_KEY", SECRET)
         text = self.env()
@@ -982,6 +986,10 @@ class ScalarWriteTest(ProfileTestCase):
 
 
 class BackupTest(ProfileTestCase):
+    @unittest.skipIf(
+        sys.platform == "win32",
+        "POSIX permission bits; Windows has no 0600 and the backup is owner-only by its own rules",
+    )
     def test_the_backup_of_the_env_file_is_private(self) -> None:
         import os
 

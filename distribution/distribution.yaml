@@ -1,7 +1,7 @@
 # pantler — distribution manifest
 #
 # Installed with:  hermes profile install <this directory or repo> --name pantler
-# Verified against Hermes 297552a9d646119871391d202509822cd86330df (v0.22.1, channel stable).
+# Verified against Hermes bf0203a794a07aac3ff764972ab9087baa4e4f4e (v0.22.5, channel stable).
 # The engine pin is engine-pin.json; this comment tracks it (the engine-update notes).
 #
 # Only `name` is required by the engine. `distribution_owned` is declared explicitly
@@ -10,14 +10,15 @@
 # instead — see profile_distribution.py:343-353.
 
 name: pantler
-# 0.0.2 is the last release. 0.0.3 is the next product release; these commits are unreleased.
-version: 0.0.2
+# The current public release. A docs, brand or CI-only push is not a release and is not
+# tagged (the status page, "Public release").
+version: 0.0.3
 description: pantler — the personal assistant harness for a small food business, run conversationally.
 author: pantler
 license: MIT
-# The floor tracks the pin: we are verified at 0.22.1 and the dev engine, the operator's
+# The floor tracks the pin: we are verified at 0.22.5 and the dev engine, the operator's
 # Hermes and the shipped artifact are all that commit (the engine-update notes).
-hermes_requires: ">=0.22.1"
+hermes_requires: ">=0.22.5"
 
 # Files this distribution owns, relative to the profile root. On `hermes profile update`
 # these are replaced; everything else in the operator's home is theirs and is never touched.
@@ -76,6 +77,7 @@ distribution_owned:
   - skills/reviews-and-testimonials
   - skills/availability-list
   - skills/documents
+  - skills/office-spreadsheets
   - skills/design
   - skills/brand-identity
   - skills/design-review

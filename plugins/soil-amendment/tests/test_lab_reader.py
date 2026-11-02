@@ -112,7 +112,7 @@ class TestLabReader(unittest.TestCase):
             # old reader could not handle.
             "Boron - CaCl2 extractable,mg/kg,Inhouse S37,,<0.1",
         ]
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
             path = Path(tmp) / "lor.csv"
             path.write_text("\n".join(rows) + "\n", encoding="utf-8")
             coa = read_coa(str(path))
@@ -145,7 +145,7 @@ class TestLabReader(unittest.TestCase):
             "Parameter,Unit,Method Reference,LOR,---",
             "Total Carbon,%,Inhouse S4a,<0.02,1.8",
         ]
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
             path = Path(tmp) / "carbon-only.csv"
             path.write_text("\n".join(rows) + "\n", encoding="utf-8")
             coa = read_coa(str(path))
@@ -185,7 +185,7 @@ class TestLabReader(unittest.TestCase):
             "Mehlich Phosphorus,mg/kg,Inhouse S7,<10,-999999",
             "pH (H2O),,,,6.2",
         ]
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
             path = Path(tmp) / "negative.csv"
             path.write_text("\n".join(rows) + "\n", encoding="utf-8")
             coa = read_coa(str(path))
@@ -219,7 +219,7 @@ class TestLabReader(unittest.TestCase):
         (the internal security audit A19-PLUG-7)
         """
         columns = MAX_SAMPLES + 70
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
             path = Path(tmp) / "wide.csv"
             self._wide_csv(path, columns)
             with self.assertRaises(CoATooLarge) as caught:
@@ -229,7 +229,7 @@ class TestLabReader(unittest.TestCase):
 
     def test_a_certificate_with_too_many_rows_is_refused_with_the_count(self):
         rows = MAX_ROWS + 100
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
             path = Path(tmp) / "long.csv"
             self._wide_csv(path, 1, rows=rows)
             with self.assertRaises(CoATooLarge) as caught:
@@ -238,7 +238,7 @@ class TestLabReader(unittest.TestCase):
 
     def test_a_file_inside_the_caps_still_parses(self):
         # The cap is a ceiling, not the new normal: an ordinary file is unaffected.
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
             path = Path(tmp) / "ok.csv"
             self._wide_csv(path, 3, rows=50)
             coa = read_coa(str(path))

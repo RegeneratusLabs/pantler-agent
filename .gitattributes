@@ -1,0 +1,10 @@
+# The office plugin's format layer is the pinned engine's own scripts, vendored unmodified and
+# verified by byte hash (`plugins/office/UPSTREAM.sha256`). Git must not rewrite their line
+# endings on checkout: the manifest is a byte contract, and CRLF on Windows made a correct file
+# fail its own provenance test.
+plugins/office/office_engine/upstream/** -text
+plugins/office/UPSTREAM.sha256 -text
+# The vendored copy under the shipped profile is compared byte-for-byte with its source by
+# check-distribution, so it needs the same rule; otherwise Windows rewrites only the copy.
+distribution/plugins/office/office_engine/upstream/** -text
+distribution/plugins/office/UPSTREAM.sha256 -text

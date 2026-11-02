@@ -36,6 +36,7 @@ import base64
 import functools
 import hashlib
 import hmac
+import http.client
 import ipaddress
 import json
 import mimetypes
@@ -50,7 +51,7 @@ from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any, Callable, Iterable
-from urllib.parse import parse_qs, unquote, urlparse
+from urllib.parse import parse_qs, unquote, urlparse, urlsplit
 
 from capabilities import installed_plugins, load_capabilities
 from connectors import ConnectorError, Connectors
@@ -1711,6 +1712,11 @@ class Handler(BaseHTTPRequestHandler):
     # Injected by `serve`.
     bff: Bff
     static_root: Path | None = None
+    #: Where `/seam/*` is forwarded (the packaged app's one-origin route), and the profile `.env`
+    #: that holds the engine's `API_SERVER_KEY`. Empty means `/seam` is not served here, which is
+    #: the dev shape: Vite proxies `/seam` itself so the browser never holds the key.
+    engine_url: str = ""
+    engine_key_file: Path | None = None
     #: Origins *other than this one* that may read a response and make a write. Empty by
     #: default, because the shell never needs one: through the dev proxy and through
     #: `--static` it is same-origin, so nothing has to be granted.
@@ -1888,6 +1894,191 @@ class Handler(BaseHTTPRequestHandler):
 
     # -- dispatch ---------------------------------------------------------
 
+    # -- the engine seam -------------------------------------------------
+    #
+    # The packaged app loads this server's origin and nothing else, so `/seam` is forwarded from
+    # here with the engine's key added on the way through. The alternative — handing the key to
+    # the renderer — is the thing the desktop notes §4 exists to avoid: a key in a page is a
+    # key in a screenshot, a devtools pane and localStorage. The engine stays loopback-bound.
+
+    def _engine_key(self) -> str:
+        """The engine's bearer token, read from the profile's `.env` on each request."""
+        path = type(self).engine_key_file
+        if path is None:
+            return ""
+        try:
+            for line in Path(path).read_text(encoding="utf-8").splitlines():
+                if line.startswith("API_SERVER_KEY="):
+                    return line.split("=", 1)[1].strip()
+        except OSError:
+            return ""
+        return ""
+
+    def _proxy_seam(self, path: str, query: str) -> None:
+        """Forward one `/seam/*` request to the engine and relay the answer.
+
+        Only `/v1/*` and `/api/*` are reachable. That is an allowlist, not politeness: the
+        engine's other surfaces (the dashboard, the TUI gateway) are not this app's, and a
+        future route must not become a proxy hole by existing.
+        """
+        base = (type(self).engine_url or "").strip()
+        if not base:
+            self._close_if_body_pending()
+            self._send_json(
+                HTTPStatus.NOT_FOUND,
+                {
+                    "error": {
+                        "message": "/seam is not configured on this server",
+                        "code": "no_engine",
+                    }
+                },
+            )
+            return
+
+        try:
+            target_url = urlsplit(base)
+        except ValueError:
+            target_url = None
+        host = (target_url.hostname or "").lower() if target_url else ""
+        if target_url is None or not host or not (host == "localhost" or is_loopback(host)):
+            self._close_if_body_pending()
+            self._send_json(
+                HTTPStatus.INTERNAL_SERVER_ERROR,
+                {
+                    "error": {
+                        "message": "the engine address must be a loopback address",
+                        "code": "bad_engine_url",
+                    }
+                },
+            )
+            return
+
+        target = path[len("/seam"):] or "/"
+        if not (target.startswith("/v1/") or target.startswith("/api/")):
+            self._close_if_body_pending()
+            self._send_json(
+                HTTPStatus.NOT_FOUND,
+                {
+                    "error": {
+                        "message": f"{path} is not part of the engine seam",
+                        "code": "not_on_seam",
+                    }
+                },
+            )
+            return
+
+        if (self.headers.get("Transfer-Encoding") or "").strip():
+            # The app sends JSON with a Content-Length; a chunked body would have to be parsed and
+            # re-framed, and nothing on this seam needs it.
+            self._close_if_body_pending()
+            self._send_json(
+                HTTPStatus.BAD_REQUEST,
+                {
+                    "error": {
+                        "message": "chunked request bodies are not supported",
+                        "code": "chunked_body",
+                    }
+                },
+            )
+            return
+
+        body: bytes | None = None
+        raw_length = (self.headers.get("Content-Length") or "").strip()
+        if raw_length:
+            try:
+                length = int(raw_length)
+            except ValueError:
+                length = -1
+            if length < 0 or length > MAX_BODY_BYTES:
+                self._close_if_body_pending()
+                self._send_json(
+                    HTTPStatus.REQUEST_ENTITY_TOO_LARGE,
+                    {
+                        "error": {
+                            "message": "the request body is too large",
+                            "code": "body_too_large",
+                        }
+                    },
+                )
+                return
+            body = self.rfile.read(length)
+
+        key = self._engine_key()
+        if not key:
+            self._close_if_body_pending()
+            self._send_json(
+                HTTPStatus.SERVICE_UNAVAILABLE,
+                {
+                    "error": {
+                        "message": "the engine's key is not available",
+                        "code": "no_engine_key",
+                    }
+                },
+            )
+            return
+
+        forwarded = {"Authorization": f"Bearer {key}"}
+        for name in ("Accept", "Content-Type", "Last-Event-ID"):
+            value = self.headers.get(name)
+            if value:
+                forwarded[name] = value
+
+        upstream_path = (target_url.path.rstrip("/") if target_url.path else "") + target
+        if query:
+            upstream_path = f"{upstream_path}?{query}"
+
+        https = target_url.scheme == "https"
+        connection_type = http.client.HTTPSConnection if https else http.client.HTTPConnection
+        connection = connection_type(
+            host, target_url.port or (443 if https else 80), timeout=600
+        )
+        try:
+            try:
+                connection.request(self.command, upstream_path, body=body, headers=forwarded)
+                upstream = connection.getresponse()
+            except OSError:
+                self._send_json(
+                    HTTPStatus.BAD_GATEWAY,
+                    {
+                        "error": {
+                            "message": "the engine is not answering",
+                            "code": "engine_unreachable",
+                        }
+                    },
+                )
+                return
+
+            content_type = upstream.getheader("Content-Type") or ""
+            self.send_response(upstream.status)
+            if content_type:
+                self.send_header("Content-Type", content_type)
+            cache_control = upstream.getheader("Cache-Control")
+            if cache_control:
+                self.send_header("Cache-Control", cache_control)
+
+            if "text/event-stream" in content_type.lower():
+                # A run's events end when the run does. Close-framing is the honest way to relay a
+                # stream whose length is unknown, and every frame is flushed as it arrives.
+                self.send_header("Connection", "close")
+                self.end_headers()
+                self.close_connection = True
+                try:
+                    while True:
+                        chunk = upstream.read(8192)
+                        if not chunk:
+                            break
+                        self.wfile.write(chunk)
+                        self.wfile.flush()
+                except (BrokenPipeError, ConnectionResetError):
+                    return
+            else:
+                payload = upstream.read()
+                self.send_header("Content-Length", str(len(payload)))
+                self.end_headers()
+                self.wfile.write(payload)
+        finally:
+            connection.close()
+
     def _dispatch(self, method: str) -> None:
         # One handler instance serves every request on a kept-alive connection, so the
         # per-request facts start here rather than in `__init__`.
@@ -1895,6 +2086,13 @@ class Handler(BaseHTTPRequestHandler):
 
         parsed = urlparse(self.path)
         path = unquote(parsed.path)
+
+        # The packaged app loads this server's origin and nothing else, so `/seam` is forwarded
+        # here with the engine's key added on the way through. The renderer never sees the key,
+        # and the engine stays bound to loopback (the desktop notes §3–4).
+        if path == "/seam" or path.startswith("/seam/"):
+            self._proxy_seam(path, parsed.query)
+            return
 
         if not path.startswith("/api/"):
             self._serve_static(path)
@@ -2318,6 +2516,8 @@ def serve(
     host: str = "127.0.0.1",
     port: int = 8650,
     static_root: str | Path | None = None,
+    engine_url: str = "",
+    engine_key_file: str | Path | None = None,
     profile_dir: str | Path | None = None,
     attachments_dir: str | Path | None = None,
     attachments_keep_days: int = DEFAULT_ATTACHMENTS_KEEP_DAYS,
@@ -2398,12 +2598,30 @@ def serve(
     )
     secret = (token or "").strip()
 
+    # `/seam` is opt-in. It exists for the packaged app, where this server is the only origin the
+    # window loads; in the dev loop Vite already forwards `/seam`, and the browser keeps working
+    # without it. A non-loopback target is refused at startup rather than at the first request —
+    # proxying the engine's key to another host is the one mistake this route could make quietly.
+    engine = (engine_url or "").strip().rstrip("/")
+    if engine:
+        parsed_engine = urlsplit(engine)
+        engine_host = (parsed_engine.hostname or "").lower()
+        if (
+            parsed_engine.scheme not in ("http", "https")
+            or not engine_host
+            or not (engine_host == "localhost" or is_loopback(engine_host))
+        ):
+            raise ValueError("--engine-url must be an http(s) loopback address")
+    engine_key = Path(engine_key_file).resolve() if engine_key_file else None
+
     handler = type(
         "BoundHandler",
         (Handler,),
         {
             "bff": application,
             "static_root": Path(static_root).resolve() if static_root else None,
+            "engine_url": engine,
+            "engine_key_file": engine_key,
             "cors_origins": granted,
             "trusted_hosts": trusted,
             "token": secret,
@@ -2424,6 +2642,7 @@ def serve(
     print(f"pantler BFF on http://{host}:{port}")
     print(f"  store   {store_path}")
     print(f"  packs   {packs}")
+    print(f"  seam    {engine or '— (the dev proxy forwards /seam)'}")
     if bff.attachments is not None:
         print(f"  files   {bff.attachments.root}")
         repaired = bff.attachments.repair_modes()
@@ -2510,6 +2729,23 @@ def main(argv: Iterable[str] | None = None) -> int:
     )
     parser.add_argument("--static", default=None, help="serve a built shell from this directory")
     parser.add_argument(
+        "--engine-url",
+        default=os.environ.get("PANTLER_ENGINE_URL") or "",
+        help=(
+            "forward /seam/* to this engine (http(s), loopback only). Off by default: the dev "
+            "server proxies /seam itself. The packaged app passes the engine it started, which "
+            "is what gives the window one origin and keeps the key out of the renderer"
+        ),
+    )
+    parser.add_argument(
+        "--engine-key-file",
+        default=None,
+        help=(
+            "the profile .env holding API_SERVER_KEY, added to /seam requests on the way through. "
+            "Defaults to <profile-dir>/.env"
+        ),
+    )
+    parser.add_argument(
         "--profile-dir",
         default=None,
         help=(
@@ -2587,6 +2823,9 @@ def main(argv: Iterable[str] | None = None) -> int:
         host=args.host,
         port=args.port,
         static_root=args.static,
+        engine_url=args.engine_url,
+        engine_key_file=args.engine_key_file
+        or (str(Path(args.profile_dir) / ".env") if args.profile_dir else None),
         profile_dir=args.profile_dir,
         attachments_dir=args.attachments_dir,
         attachments_keep_days=args.attachments_keep_days,

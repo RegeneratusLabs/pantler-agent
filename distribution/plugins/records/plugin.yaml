@@ -4,7 +4,7 @@ manifest_version: 2
 api_version: 1
 author: pantler
 license: MIT
-requires_hermes: ">=0.22.1"
+requires_hermes: ">=0.22.5"
 description: >-
   Read and write the operator's own records — certificates, spray applications, blocks,
   harvests — through the kernel's record store, validated against the pack that declares

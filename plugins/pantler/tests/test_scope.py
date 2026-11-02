@@ -34,10 +34,15 @@ def load_scope():
     return module
 
 
+@unittest.skipIf(
+    sys.platform == "win32",
+    "the fixtures are POSIX paths (/home/..., /usr/share/fonts, /etc/os-release); the guard's "
+    "Windows path coverage is a follow-up, not something this suite proves by passing",
+)
 class ScopeFixture(unittest.TestCase):
     def setUp(self) -> None:
         self.scope_module = load_scope()
-        self._tmp = tempfile.TemporaryDirectory()
+        self._tmp = tempfile.TemporaryDirectory(ignore_cleanup_errors=True)
         self.root = Path(self._tmp.name)
         self.home = self.root / ".hermes-dev"
         self.profiles = self.home / "profiles"

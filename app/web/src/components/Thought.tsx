@@ -32,7 +32,7 @@ import { Brain } from 'lucide-react'
 import { useEffect, useLayoutEffect, useRef, useState, type UIEvent } from 'react'
 import type { Thought } from '../seam/reducer'
 import { cn } from '../ui/cn'
-import { thoughtControl, thoughtLine, thoughtOpen } from './thought'
+import { thoughtControl, thoughtLine, thoughtOpen } from './thought-steps'
 
 /**
  * `useLayoutEffect` warns when it runs on the server, and the component tests render with

@@ -4,7 +4,7 @@ manifest_version: 2
 api_version: 1
 author: pantler
 license: MIT
-requires_hermes: ">=0.22.1"
+requires_hermes: ">=0.22.5"
 description: >-
   The design studio: compose and measure a card, poster, sign, one-page site or brand sheet
   from a written brief, and render it as a self-contained SVG and an exact-size PNG. Every number — margins,

@@ -4,7 +4,7 @@ manifest_version: 2
 api_version: 1
 author: pantler
 license: MIT
-requires_hermes: ">=0.22.1"
+requires_hermes: ">=0.22.5"
 description: >-
   Record an application against the operator's own spray book: resolve the block and the
   product, multiply the rate by the area, and date the earliest safe harvest from the

@@ -61,6 +61,7 @@ plugins:
     - consent
     - connectors
     - studio
+    - office
 
 approvals:
   mode: manual

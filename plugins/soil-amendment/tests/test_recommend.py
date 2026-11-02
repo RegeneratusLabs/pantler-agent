@@ -168,7 +168,7 @@ class TestRecommend(unittest.TestCase):
         profile.raw["product_selections"]["potassium"] = dict(lime)
         profile.raw["max_kg_ha_yr"]["Lime (fine)"] = [40.0, 400.0]
 
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
             path = os.path.join(tmp, "synthetic.csv")
             with open(path, "w", encoding="utf-8") as handle:
                 handle.write(text)

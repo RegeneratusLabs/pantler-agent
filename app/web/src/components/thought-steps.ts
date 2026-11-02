@@ -37,7 +37,7 @@
  */
 
 import type { Thought, ToolCall } from '../seam/reducer'
-import { segmentTools, type TurnSegment } from './activity'
+import { segmentTools, type TurnSegment } from './presentation'
 
 /** Thinking and work in one sequence, in the order the turn actually happened. */
 export type TurnStep = { kind: 'thought'; key: string; thought: Thought } | TurnSegment

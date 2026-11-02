@@ -34,7 +34,7 @@ class HostileArgumentsTestCase(unittest.TestCase):
     """
 
     def setUp(self) -> None:
-        self._dir = tempfile.TemporaryDirectory()
+        self._dir = tempfile.TemporaryDirectory(ignore_cleanup_errors=True)
         self.dir = Path(self._dir.name)
         self.mod = load_plugin()
         self.ctx = PerKeyCtx(
@@ -236,7 +236,7 @@ class SprayPluginTestCase(unittest.TestCase):
 
         from pantler_core import RecordBook
 
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
             store = Path(tmp) / "records.db"
             ctx = PerKeyCtx(catalogue_path=BOOK, store_path=str(store), packs_dir=str(REPO / "packs"))
             self.mod.register(ctx)
@@ -293,7 +293,7 @@ class SprayPluginTestCase(unittest.TestCase):
 
         from pantler_core import RecordBook
 
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
             store = Path(tmp) / "records.db"
             writer = RecordBook(store, REPO / "packs")
             writer.save(
@@ -342,7 +342,7 @@ class SprayPluginTestCase(unittest.TestCase):
 
         from pantler_core import RecordBook
 
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
             store = Path(tmp) / "records.db"
             writer = RecordBook(store, REPO / "packs")
             writer.save("block", {"name": "North block", "area_ha": 2})
@@ -374,7 +374,7 @@ class SprayPluginTestCase(unittest.TestCase):
         import tempfile
         from pathlib import Path
 
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
             ctx = PerKeyCtx(
                 catalogue_path=BOOK,
                 store_path=str(Path(tmp) / "empty.db"),
@@ -408,7 +408,7 @@ class SprayPluginTestCase(unittest.TestCase):
         """
         with open(BOOK, encoding="utf-8") as handle:
             payload = json.load(handle)
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
             path = Path(tmp) / "spraybook.json"
             path.write_text(json.dumps(payload))
             self.ctx.settings["catalogue_path"] = str(path)
@@ -436,7 +436,7 @@ class SprayPluginTestCase(unittest.TestCase):
         """
         from pantler_core import RecordBook
 
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
             store = Path(tmp) / "records.db"
             writer = RecordBook(store, REPO / "packs")
             writer.save("block", {"name": "North block", "area_ha": 2})

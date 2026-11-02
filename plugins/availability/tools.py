@@ -81,7 +81,7 @@ def _book():
     path = _catalogue_path()
     if path is None:
         raise PriceBookError(
-            "no catalogue configured: set plugins.entries.availability.pricebook_path in "
+            "no catalogue configured: set plugins.entries.availability.settings.pricebook_path in "
             "config.yaml, or PANTLER_PRICEBOOK, or place pricebook.json in HERMES_HOME"
         )
     if not path.is_file():

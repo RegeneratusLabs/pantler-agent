@@ -38,7 +38,7 @@ import {
   summarise,
   type ActivityDetail,
   type ToolFamily
-} from './activity'
+} from './presentation'
 import { FileCard } from './FileCard'
 import { siteTarget } from './preview'
 import { usePreview } from './preview-context'

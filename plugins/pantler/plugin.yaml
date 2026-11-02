@@ -4,7 +4,7 @@ manifest_version: 2
 api_version: 1
 author: pantler
 license: MIT
-requires_hermes: ">=0.22.1"
+requires_hermes: ">=0.22.5"
 description: >-
   pantler's own tools: draft an invoice from the operator's price book and read a saved
   draft back from the record store. Nothing here is sent — the draft is written into the

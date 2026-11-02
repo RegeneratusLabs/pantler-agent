@@ -209,7 +209,7 @@ def _ledger() -> Ledger:
     path = _price_book_path(ctx)
     if path is None:
         raise PriceBookError(
-            "no price book configured: set plugins.entries.pantler.pricebook_path "
+            "no price book configured: set plugins.entries.pantler.settings.pricebook_path "
             "in config.yaml, or PANTLER_PRICEBOOK, or place pricebook.json in HERMES_HOME"
         )
     if not path.is_file():

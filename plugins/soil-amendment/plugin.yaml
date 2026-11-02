@@ -4,7 +4,7 @@ manifest_version: 2
 api_version: 1
 author: pantler
 license: MIT
-requires_hermes: ">=0.22.1"
+requires_hermes: ">=0.22.5"
 description: >-
   Read an EAL soil certificate of analysis and return a structured soil amendment
   program - base saturations, element deficits, product rates with annual caps, and

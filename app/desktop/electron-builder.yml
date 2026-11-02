@@ -1,0 +1,72 @@
+# pantler's desktop host — the internal Windows build
+#
+# Unsigned on purpose while the product is internal: no certificate is configured, and
+# `forceCodeSigning` is false so the build still produces an artifact. SmartScreen will warn on a
+# machine that is not this one; that is the accepted trade until signing exists
+# (the desktop notes §5 item 5).
+#
+# The payload contract `src/paths.mjs` names (shell, server, packs, runtime) is staged by
+# scripts/build-windows-payload.ps1; this config only arranges it in the app and writes the
+# per-user NSIS installer.
+
+appId: app.pantler.desktop
+productName: pantler
+artifactName: Pantler-Setup-${version}.${ext}
+copyright: Copyright © 2026 Regeneratus Labs
+
+directories:
+  output: release
+  buildResources: build
+
+files:
+  - src/**
+  - package.json
+
+asar: true
+forceCodeSigning: false
+
+# The update feed. `releases/latest/download` is a stable, token-free URL: electron-builder writes
+# `latest.yml` beside the installer, the release job uploads both, and the app reads that one file
+# instead of the GitHub API (which is rate-limited and would need a token for a private repo).
+publish:
+  provider: generic
+  url: https://github.com/RegeneratusLabs/pantler-agent/releases/latest/download
+
+extraResources:
+  - from: ../identity
+    to: identity
+  - from: ../web/dist
+    to: shell
+  - from: ../server
+    to: server
+  - from: ../../packs
+    to: packs
+  - from: ../../distribution
+    to: distribution
+  - from: payload/runtime
+    to: runtime
+
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  # Internal builds are not signed; do not edit the executable's resources either, so a build on
+  # a machine without the Windows SDK still completes.
+  signAndEditExecutable: false
+
+nsis:
+  # One-click: per-user, no elevation, no directory prompt. The assisted installer's /S path
+  # waited on a window in CI; a one-click installer is also the honest default for an internal
+  # build that a non-technical operator double-clicks.
+  oneClick: true
+  perMachine: false
+  allowElevation: false
+  allowToChangeInstallationDirectory: false
+  # The smoke job starts the app itself; an installer that also launches it makes the
+  # pipeline race two processes on first run.
+  runAfterFinish: false
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: pantler
+  uninstallDisplayName: pantler

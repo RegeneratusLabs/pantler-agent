@@ -13,7 +13,7 @@
 
 import { describe, expect, it } from 'vitest'
 import type { Thought, ToolCall } from '../seam/reducer'
-import { stepsOf, thoughtControl, thoughtLine, thoughtOpen, type TurnStep } from './thought'
+import { stepsOf, thoughtControl, thoughtLine, thoughtOpen, type TurnStep } from './thought-steps'
 
 function call(seq: number, tool = 'web_search', status: ToolCall['status'] = 'ok'): ToolCall {
   return { key: `${tool}#${seq}`, seq, tool, status, startedAt: 0 }

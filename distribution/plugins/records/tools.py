@@ -153,7 +153,8 @@ def _book() -> RecordBook:
     paths = _paths()
     if paths is None:
         raise RecordBookError(
-            "no record store configured: set plugins.entries.records.store_path and packs_dir in "
+            "no record store configured: set plugins.entries.records.settings.store_path and "
+            "settings.packs_dir in "
             "config.yaml, or PANTLER_STORE and PANTLER_PACKS, or run beside HERMES_HOME"
         )
     store, packs, custom = paths
@@ -626,7 +627,8 @@ def _custom_type_pack(params: dict[str, Any]):
     paths = _paths()
     if paths is None or paths[2] is None:
         raise RecordBookError(
-            "no custom-packs directory is configured; set plugins.entries.records.custom_packs_dir "
+            "no custom-packs directory is configured; set "
+            "plugins.entries.records.settings.custom_packs_dir "
             "or PANTLER_CUSTOM_PACKS"
         )
     return pack, paths[2], raw

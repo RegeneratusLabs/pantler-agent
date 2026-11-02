@@ -4,7 +4,7 @@ manifest_version: 2
 api_version: 1
 author: pantler
 license: MIT
-requires_hermes: ">=0.22.1"
+requires_hermes: ">=0.22.5"
 description: >-
   The pre-send gate for direct marketing: one decision per recipient from the consent
   records — allowed, no record, withdrawn, or ambiguous — plus the two draft checks, sender

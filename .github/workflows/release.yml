@@ -2,8 +2,12 @@ name: Release
 
 # The tag is the release. `scripts/export-public.sh` in the maintainers' tree publishes one commit
 # per release and one annotated tag whose message is the release notes; this workflow decides
-# nothing about what a release says. It only turns that tag into a page, so publishing needs no
-# personal token on anyone's machine.
+# nothing about what a release says. It turns that tag into the page, then builds the Windows
+# installer from the same tree and attaches it.
+#
+# The installer is built here, in the public tree, rather than in the maintainers' repo: every
+# input is public (the pinned engine, the payload script, the office libraries), so the repository
+# that publishes the page also publishes the download — no cross-repo secret, no manual upload.
 #
 # Requires Settings → Actions → General → Workflow permissions → "Read and write permissions";
 # the `contents: write` below is capped by that repository setting.
@@ -20,7 +24,7 @@ permissions:
   contents: write
 
 jobs:
-  release:
+  publish:
     name: publish the tag
     runs-on: ubuntu-latest
     steps:
@@ -43,3 +47,79 @@ jobs:
             --title "Pantler $tag" \
             --notes-file notes.md \
             --verify-tag
+
+  installer:
+    name: build and attach the Windows installer
+    needs: publish
+    runs-on: windows-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Read the engine pin
+        id: pin
+        shell: pwsh
+        run: |
+          $pin = Get-Content engine-pin.json -Raw | ConvertFrom-Json
+          "commit=$($pin.commit)" >> $env:GITHUB_OUTPUT
+
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: NousResearch/hermes-agent
+          ref: ${{ steps.pin.outputs.commit }}
+          path: .engine
+          fetch-depth: 1
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: |
+            app/web/package-lock.json
+            app/desktop/package-lock.json
+
+      - name: The installer's version is the product's version
+        shell: pwsh
+        run: |
+          $desktop = (Get-Content app/desktop/package.json -Raw | ConvertFrom-Json).version
+          $manifest = (Select-String -Path distribution/distribution.yaml -Pattern '^version:\s*(\S+)').Matches[0].Groups[1].Value
+          if ($desktop -ne $manifest) {
+            throw "app/desktop/package.json is $desktop but distribution.yaml is $manifest"
+          }
+          Write-Host "installer version: $desktop"
+
+      - name: Shell
+        working-directory: app/web
+        run: |
+          npm ci --ignore-scripts
+          npm run build
+
+      - name: Runtime payload
+        shell: pwsh
+        run: >
+          pwsh -NoProfile -File scripts/build-windows-payload.ps1
+          -EngineDir .engine
+          -RepoRoot .
+
+      - name: Installer (unsigned)
+        working-directory: app/desktop
+        run: |
+          npm ci
+          npm run build:win
+
+      - name: Attach the installer and its update metadata
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = $env:GITHUB_REF_NAME
+          $release = Join-Path (Resolve-Path app\desktop\release) ""
+          $exe = Get-ChildItem $release -Filter "Pantler-Setup-*.exe" | Select-Object -First 1
+          $latest = Join-Path $release "latest.yml"
+          if (-not $exe) { throw "the installer was not produced" }
+          if (-not (Test-Path $latest)) { throw "latest.yml was not produced — check the publish block" }
+          gh release upload $tag $exe.FullName $latest --clobber
+          Write-Host "attached $($exe.Name) and latest.yml to $tag"

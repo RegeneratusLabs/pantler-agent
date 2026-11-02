@@ -26,7 +26,7 @@
  */
 
 import { formatBytes } from '@shared/attachments'
-import { linkKind } from './markdown'
+import { linkKind } from './markdown-parse'
 
 /** How much of a text file the preview pane will show before it says "there is more". */
 export const TEXT_PREVIEW_BYTES = 512 * 1024

@@ -162,7 +162,7 @@ class RenderTestCase(unittest.TestCase):
         cls.lib = library()
 
     def setUp(self):
-        self._tmp = tempfile.TemporaryDirectory()
+        self._tmp = tempfile.TemporaryDirectory(ignore_cleanup_errors=True)
         self.tmp = Path(self._tmp.name)
         self.workspace = self.tmp / "workspace"
         self.workspace.mkdir()
@@ -332,7 +332,7 @@ class BrandTestCase(unittest.TestCase):
             status="starter",
         )
         self.assertEqual(brand_kit.validate(kit, self.lib), [])
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
             path = brand_kit.save(kit, Path(tmp) / "brand.json")
             again = brand_kit.load(path)
         self.assertEqual(again.name, kit.name)
@@ -347,7 +347,7 @@ class PageTestCase(unittest.TestCase):
         cls.lib = library()
 
     def setUp(self):
-        self._tmp = tempfile.TemporaryDirectory()
+        self._tmp = tempfile.TemporaryDirectory(ignore_cleanup_errors=True)
         self.tmp = Path(self._tmp.name)
 
     def tearDown(self):
@@ -421,7 +421,7 @@ class PageTestCase(unittest.TestCase):
 
 class ToolTestCase(unittest.TestCase):
     def setUp(self):
-        self._tmp = tempfile.TemporaryDirectory()
+        self._tmp = tempfile.TemporaryDirectory(ignore_cleanup_errors=True)
         self.tmp = Path(self._tmp.name)
         os.environ["PANTLER_WORKSPACE"] = str(self.tmp)
         import studio as plugin_package

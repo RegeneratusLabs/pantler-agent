@@ -1,0 +1,221 @@
+name: Windows
+
+# The desktop host's platform gate. This is the closest thing to the operator's machine CI can
+# offer: a real Windows runner, the BFF's socket tests, the host's supervisor/paths/readiness
+# tests, and a production shell build. It does not build the installer yet — that needs the staged
+# payload (`app/desktop/payload/runtime`), which is the next piece of the desktop workstream.
+#
+# It is a separate workflow, not a job in ci.yml, because a Windows-only failure should read as
+# "the desktop platform" in the run list rather than as a red Linux suite.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "app/desktop/**"
+      - "app/server/**"
+      - "app/identity/**"
+      - "app/shared/**"
+      - "app/web/**"
+      - "core/**"
+      - "plugins/**"
+      - "scripts/**"
+      - ".github/workflows/windows.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows:
+    name: windows — host, BFF and shell
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          # The declared floor (core/pyproject.toml), and what the BFF must run under on a
+          # machine that has a system Python the operator never sees.
+          python-version: "3.11"
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: app/web/package-lock.json
+
+      - name: Versions
+        run: |
+          python --version
+          node --version
+
+      - name: Office format layer
+        run: python -m pip install --disable-pip-version-check -r plugins/office/requirements.txt
+
+      - name: Kernel, distribution and the HTTP layer
+        shell: pwsh
+        run: |
+          $env:PYTHONPATH = "core/src;app/server"
+          python scripts/check-seam.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python scripts/check-distribution.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          # The socket-level suites: the seam forward, the HTTP guard and the settings files.
+          # The rest of the BFF suite is POSIX-shaped (permission-bit assertions, profile
+          # fixtures built with symlinks) and is the Linux gate's job until it is ported —
+          # the status page records that rather than pretending this job covers it.
+          Push-Location app/server/tests
+          python -m unittest test_seam_proxy test_http test_settings
+          $code = $LASTEXITCODE
+          Pop-Location
+          if ($code -ne 0) { exit $code }
+
+      - name: Plugins
+        shell: pwsh
+        run: |
+          Get-ChildItem plugins -Directory | ForEach-Object {
+            $tests = Join-Path $_.FullName "tests"
+            if (Test-Path $tests) {
+              Write-Host "-- $($_.Name) --"
+              python -m unittest discover -s $tests -t $tests
+              if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+            }
+          }
+
+      - name: Desktop host unit tests
+        working-directory: app/desktop
+        run: node --test "test/**/*.test.mjs"
+
+      - name: Identity
+        run: node scripts/identity-check.mjs
+
+      - name: Shell — install, typecheck, unit tests, build
+        working-directory: app/web
+        run: |
+          npm ci --ignore-scripts
+          npm run typecheck
+          npx vitest run
+          npm run build
+
+  # The installer job is dispatch-only: it downloads a pinned CPython, the engine and its
+  # dependencies, packages them, installs the result silently and boots it once. It is not on
+  # every push because it is minutes, not seconds — and because a broken push should not hold a
+  # slow artifact hostage.
+  installer:
+    name: installer — build, install, smoke
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Read the engine pin
+        id: pin
+        shell: pwsh
+        run: |
+          $pin = Get-Content engine-pin.json -Raw | ConvertFrom-Json
+          "commit=$($pin.commit)" >> $env:GITHUB_OUTPUT
+          "tag=$($pin.tag)" >> $env:GITHUB_OUTPUT
+
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: NousResearch/hermes-agent
+          ref: ${{ steps.pin.outputs.commit }}
+          path: .engine
+          fetch-depth: 1
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          # The build host's Python only drives uv; the payload carries its own interpreter.
+          python-version: "3.11"
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: app/web/package-lock.json
+
+      - name: The installer's version is the product's version
+        shell: pwsh
+        run: |
+          $desktop = (Get-Content app/desktop/package.json -Raw | ConvertFrom-Json).version
+          $manifest = (Select-String -Path distribution/distribution.yaml -Pattern '^version:\s*(\S+)').Matches[0].Groups[1].Value
+          if ($desktop -ne $manifest) {
+            throw "app/desktop/package.json is $desktop but distribution.yaml is $manifest — bump both"
+          }
+          Write-Host "installer version: $desktop"
+
+      - name: Shell
+        working-directory: app/web
+        run: |
+          npm ci --ignore-scripts
+          npm run build
+
+      - name: Runtime payload
+        shell: pwsh
+        run: >
+          pwsh -NoProfile -File scripts/build-windows-payload.ps1
+          -EngineDir .engine
+          -RepoRoot .
+
+      - name: Installer (unsigned)
+        working-directory: app/desktop
+        run: |
+          npm ci
+          npm run build:win
+
+      - name: Install silently and prove it starts
+        shell: pwsh
+        run: |
+          $setup = Get-ChildItem app\desktop\release\Pantler-Setup-*.exe | Select-Object -First 1
+          if (-not $setup) { throw "the installer was not produced" }
+          Write-Host "installer: $($setup.FullName) ($([math]::Round($setup.Length / 1MB)) MB)"
+          $install = Start-Process -FilePath $setup.FullName -ArgumentList "/S" -PassThru
+          if (-not $install.WaitForExit(900000)) {
+            $install.Kill()
+            throw "the installer did not finish in fifteen minutes"
+          }
+          if ($install.ExitCode -ne 0) { throw "the installer exited $($install.ExitCode)" }
+          # The post-install location is the installer's choice, not ours: find the app under
+          # the per-user locations rather than assuming electron-builder's default directory.
+          $exe = Get-ChildItem "$env:LOCALAPPDATA" -Depth 3 -Filter "pantler.exe" -File -ErrorAction SilentlyContinue |
+            Select-Object -First 1 -ExpandProperty FullName
+          if (-not $exe) {
+            Write-Host "--- %LOCALAPPDATA% tree (depth 3)"
+            Get-ChildItem "$env:LOCALAPPDATA" -Depth 3 -Directory -ErrorAction SilentlyContinue |
+              Where-Object { $_.Name -match 'antler|Programs' } | ForEach-Object { Write-Host $_.FullName }
+            throw "the install produced no pantler.exe under %LOCALAPPDATA%"
+          }
+          Write-Host "installed: $exe"
+
+          # The smoke run boots the engine and the BFF and writes the marker before opening a
+          # window; "it installed" and "it starts" are separate claims and this is the second.
+          $env:PANTLER_SMOKE = "1"
+          $marker = Join-Path $env:APPDATA "pantler\smoke-ok"
+          Remove-Item $marker -ErrorAction SilentlyContinue
+          $process = Start-Process -FilePath $exe -PassThru
+          $deadline = (Get-Date).AddMinutes(3)
+          while (-not (Test-Path $marker) -and (Get-Date) -lt $deadline) {
+            Start-Sleep -Seconds 2
+            if ($process.HasExited -and -not (Test-Path $marker)) { break }
+          }
+          if (-not (Test-Path $marker)) {
+            $logs = Join-Path $env:APPDATA "pantler\logs"
+            Write-Host "--- boot trace"
+            if (Test-Path (Join-Path $logs "boot-trace.log")) { Get-Content (Join-Path $logs "boot-trace.log") }
+            Write-Host "--- logs"
+            if (Test-Path $logs) { Get-ChildItem $logs | ForEach-Object { Write-Host "--- $($_.Name)"; Get-Content $_ -Tail 60 } }
+            $errorFile = Join-Path $env:APPDATA "pantler\boot-error.txt"
+            if (Test-Path $errorFile) { Write-Host "--- boot error"; Get-Content $errorFile }
+            throw "the app did not reach the smoke marker"
+          }
+          Write-Host "smoke: engine and BFF came up"
+          if (-not $process.WaitForExit(30000)) { $process.Kill() }
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: pantler-windows-unsigned
+          path: app/desktop/release/Pantler-Setup-*.exe
+          if-no-files-found: error

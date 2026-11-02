@@ -364,6 +364,18 @@
       ]
     },
     {
+      "name": "office",
+      "label": "\ud83d\udd0c Office",
+      "description": "Word documents, workbooks and slide decks: read what an operator already has, write a workbook an accountant or an inspector can check, and change a copy of one they were sent. The format layer is the pinned engine's own MIT scripts, vendored; every number, path and total is decided here.",
+      "enabled": true,
+      "configured": true,
+      "tools": [
+        "office_read",
+        "xlsx_create",
+        "xlsx_edit"
+      ]
+    },
+    {
       "name": "records",
       "label": "\ud83d\udd0c Records",
       "description": "Read and write the operator's own records \u2014 certificates, spray applications, blocks, harvests \u2014 through the kernel's record store, validated against the pack that declares them. The model extracts what the operator said; this tool decides whether it is a record.",
@@ -405,7 +417,7 @@
     {
       "name": "studio",
       "label": "\ud83d\udd0c Studio",
-      "description": "The design studio: compose and measure a card, poster, sign or brand sheet from a written brief, and render it as a self-contained SVG and an exact-size PNG. Every number \u2014 margins, type sizes, line breaks, contrast, safe zones \u2014 is computed here, not by the model. Also prepares the operator's own photographs and derives a brand kit from their answers.",
+      "description": "The design studio: compose and measure a card, poster, sign, one-page site or brand sheet from a written brief, and render it as a self-contained SVG and an exact-size PNG. Every number \u2014 margins, type sizes, line breaks, contrast, safe zones \u2014 is computed here, not by the model. Also prepares the operator's own photographs and derives a brand kit from their answers.",
       "enabled": true,
       "configured": true,
       "tools": [

@@ -116,7 +116,8 @@ def _book() -> RecordBook:
     paths = _paths()
     if paths is None:
         raise RecordBookError(
-            "no record store configured: set plugins.entries.consent.store_path and packs_dir in "
+            "no record store configured: set plugins.entries.consent.settings.store_path and "
+            "settings.packs_dir in "
             "config.yaml, or PANTLER_STORE and PANTLER_PACKS"
         )
     store, packs, custom = paths

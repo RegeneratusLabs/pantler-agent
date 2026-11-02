@@ -109,8 +109,8 @@ run_golden() {
 
 run_web() {
   echo "== shell =="
-  # The identity module's pair, and the guard that reads it: a placeholder app id is the one
-  # mistake the design notes §8 says cannot be repaired after release
+  # The identity module's pair, and the guard that reads it: the identifiers are decided now
+  # (2026-11-01), and the checker proves none of them is still a placeholder
   # (the internal audit IDN-1, IDN-3).
   node "$ROOT/scripts/identity-check.mjs"
   # A subshell: the suite used to leave the caller in app/web.
@@ -118,13 +118,20 @@ run_web() {
     cd app/web
     npm run --silent typecheck
     npx vitest run
-    # And the guard has to still refuse. Running it is the only way to know it has not rotted;
-    # the escape hatch is what a deliberate throwaway build uses.
-    if PANTLER_ALLOW_PLACEHOLDER= npm run --silent build >/dev/null 2>&1; then
-      echo "the identity placeholder guard did not refuse a build" >&2
-      exit 1
-    fi
-    echo "identity guard: a release build refuses the placeholder identifiers"
+    # A real build must complete now: the guard refuses placeholders, and there are none left.
+    npm run --silent build >/dev/null
+    echo "identity guard: a release build accepts the decided identifiers"
+  )
+}
+
+run_desktop() {
+  echo "== desktop host =="
+  # The Electron-free half: paths, the first-run key, readiness probes and the supervisor. The
+  # window needs a display and a packaged payload, so it is not here; what decides whether a
+  # child starts, restarts or is stopped is.
+  (
+    cd app/desktop
+    node --test "test/**/*.test.mjs"
   )
 }
 
@@ -132,9 +139,10 @@ case "$WHAT" in
   engine) run_engine ;;
   python) run_python ;;
   web)    run_web ;;
+  desktop) run_desktop ;;
   golden) run_golden ;;
-  all)    run_engine; echo; run_python; echo; run_web ;;
-  *)      echo "usage: $0 [all|engine|python|web|golden]" >&2; exit 2 ;;
+  all)    run_engine; echo; run_python; echo; run_web; echo; run_desktop ;;
+  *)      echo "usage: $0 [all|engine|python|web|desktop|golden]" >&2; exit 2 ;;
 esac
 
 echo

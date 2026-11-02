@@ -185,7 +185,7 @@ class PantlerPluginTestCase(unittest.TestCase):
         import tempfile
         from pathlib import Path
 
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
             profile = Path(tmp) / "profiles" / "pantler"
             profile.mkdir(parents=True)
             (profile / "config.yaml").write_text("model:\n  provider: test\n")
@@ -231,7 +231,7 @@ class PantlerPluginTestCase(unittest.TestCase):
         import tempfile
         from pathlib import Path
 
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
             profile = Path(tmp) / "profiles" / "pantler"
             profile.mkdir(parents=True)
             (profile / "config.yaml").write_text("model:\n  provider: test\n")
@@ -286,7 +286,7 @@ class PantlerPluginTestCase(unittest.TestCase):
         import tempfile
         from pathlib import Path
 
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
             profile = Path(tmp) / "profiles" / "pantler"
             profile.mkdir(parents=True)
             (profile / "config.yaml").write_text("model:\n  provider: test\n")
@@ -316,7 +316,7 @@ class PantlerPluginTestCase(unittest.TestCase):
         import tempfile
         from pathlib import Path
 
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
             book = Path(tmp) / "pricebook.json"
             book.write_text(Path(PRICEBOOK).read_text())
             self.ctx.settings["pricebook_path"] = str(book)
@@ -350,7 +350,7 @@ class PantlerPluginTestCase(unittest.TestCase):
 
         from pantler_core import RecordBook
 
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
             profile = Path(tmp) / "profiles" / "pantler"
             profile.mkdir(parents=True)
             (profile / "config.yaml").write_text("model:\n  provider: test\n")
@@ -408,7 +408,7 @@ class PantlerPluginTestCase(unittest.TestCase):
 
         from pantler_core import RecordBook
 
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
             profile = Path(tmp) / "profiles" / "pantler"
             profile.mkdir(parents=True)
             (profile / "config.yaml").write_text("model:\n  provider: test\n")

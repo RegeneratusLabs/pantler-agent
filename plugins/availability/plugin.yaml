@@ -4,7 +4,7 @@ manifest_version: 2
 api_version: 1
 author: pantler
 license: MIT
-requires_hermes: ">=0.22.1"
+requires_hermes: ">=0.22.5"
 description: >-
   Turn a spoken field walk into an unpriced, customer-facing availability list: resolve each
   item against the operator's own catalogue, normalise the quantity and unit, and keep what

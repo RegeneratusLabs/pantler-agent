@@ -13,11 +13,14 @@
  */
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const MODULE = path.join(HERE, '..', 'app', 'identity')
-const { identity, PLACEHOLDER } = await import(path.join(MODULE, 'identity.mjs'))
+// A bare Windows path is not a valid ESM specifier; the URL form is.
+const { identity, PLACEHOLDER } = await import(
+  pathToFileURL(path.join(MODULE, 'identity.mjs')).href
+)
 
 const declared = readFileSync(path.join(MODULE, 'identity.d.mts'), 'utf8')
 const interfaceBody = declared.match(/export interface Identity \{([\s\S]*?)\n\}/)

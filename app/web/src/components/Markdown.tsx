@@ -1,6 +1,6 @@
 import { Fragment, useMemo, type ReactNode } from 'react'
 import { Image as ImageIcon } from 'lucide-react'
-import { linkKind, parseMarkdown, type Align, type Block, type Inline } from './markdown'
+import { linkKind, parseMarkdown, type Align, type Block, type Inline } from './markdown-parse'
 import { PreviewLink } from './Prose'
 import { cn } from '../ui/cn'
 

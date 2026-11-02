@@ -26,7 +26,7 @@ import {
   segmentTools,
   subjectOf,
   summarise
-} from './activity'
+} from './presentation'
 
 function call(patch: Partial<ToolCall> & { tool: string }): ToolCall {
   return { key: `${patch.tool}#0`, seq: 0, status: 'ok', startedAt: 0, ...patch }

@@ -7,7 +7,7 @@ import {
   plainText,
   type Block,
   type Inline
-} from './markdown'
+} from './markdown-parse'
 
 /**
  * The parser's tests, written against documents rather than against functions.

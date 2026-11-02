@@ -4,7 +4,7 @@ manifest_version: 2
 api_version: 1
 author: pantler
 license: MIT
-requires_hermes: ">=0.22.1"
+requires_hermes: ">=0.22.5"
 description: >-
   Use the apps the operator has connected through Composio. The service holds the key and the
   connection; this plugin lets the assistant read through it and escalates every write to the

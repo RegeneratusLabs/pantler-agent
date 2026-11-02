@@ -32,7 +32,7 @@ from consentengine import ALLOWED, AMBIGUOUS, NO_RECORD, WITHDRAWN, check_draft 
 
 class GateTestCase(unittest.TestCase):
     def setUp(self) -> None:
-        self._dir = tempfile.TemporaryDirectory()
+        self._dir = tempfile.TemporaryDirectory(ignore_cleanup_errors=True)
         self.book = RecordBook(Path(self._dir.name) / "records.db", REPO / "packs")
 
     def tearDown(self) -> None:
@@ -238,7 +238,7 @@ class PluginTestCase(unittest.TestCase):
             return dict(self.settings) if key is None else self.settings.get(key, default)
 
     def setUp(self) -> None:
-        self._dir = tempfile.TemporaryDirectory()
+        self._dir = tempfile.TemporaryDirectory(ignore_cleanup_errors=True)
         self.store = Path(self._dir.name) / "records.db"
 
     def tearDown(self) -> None:

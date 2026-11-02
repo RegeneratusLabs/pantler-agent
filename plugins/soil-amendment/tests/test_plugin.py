@@ -237,7 +237,7 @@ class TestPlugin(unittest.TestCase):
         The audit's file had 40,000 value columns and produced a 226 MB tool result
         (the internal security audit A19-PLUG-7).
         """
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
             path = os.path.join(tmp, "wide.csv")
             self._write_coa(path, columns=120)
             answer = json.loads(MOD.tools.soil_test_read({"coa_path": path}))
@@ -251,7 +251,7 @@ class TestPlugin(unittest.TestCase):
         The reader's caps bound the input; this is what bounds the output
         (the internal security audit A19-PLUG-7).
         """
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
             path = os.path.join(tmp, "many.csv")
             self._write_coa(path, columns=50, rows=1990, name_len=40)
             answer = json.loads(MOD.tools.soil_test_read({"coa_path": path}))

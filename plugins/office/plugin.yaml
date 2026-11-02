@@ -1,0 +1,60 @@
+name: office
+version: 0.1.0
+manifest_version: 2
+api_version: 1
+author: pantler
+license: MIT
+requires_hermes: ">=0.22.5"
+description: >-
+  Word documents, workbooks and slide decks: read what an operator already has, write a workbook an
+  accountant or an inspector can check, and change a copy of one they were sent. The format layer is
+  the pinned engine's own MIT scripts, vendored; every number, path and total is decided here.
+tags: [office, documents, spreadsheets, xlsx, docx, pptx, word, excel, powerpoint]
+provides_tools:
+  - office_read
+  - xlsx_create
+  - xlsx_edit
+config_schema:
+  workspace_dir:
+    type: str
+    default: ""
+    description: >-
+      The active business's workspace. Every path this plugin resolves is confined to it (reads may
+      also come from the profile's attachments). Defaults to PANTLER_WORKSPACE, or workspace/ beside
+      HERMES_HOME.
+  attachments_dir:
+    type: str
+    default: ""
+    description: >-
+      Where the operator's uploads live, so a file they sent can be read. Defaults to the profile's
+      attachments/ or the dev install's .data/attachments.
+  store_path:
+    type: str
+    default: ""
+    description: >-
+      Path to the records database, for `xlsx_create`'s `source`. Defaults to records.db in
+      HERMES_HOME, or PANTLER_STORE. The store is only ever read.
+  packs_dir:
+    type: str
+    default: ""
+    description: >-
+      Directory holding the installed packs, so a record type resolves. Defaults to PANTLER_PACKS,
+      or packs/ beside HERMES_HOME.
+  custom_packs_dir:
+    type: str
+    default: ""
+    description: >-
+      Directory holding the operator's own record types. Defaults to custom-packs/ beside the
+      profile, or PANTLER_CUSTOM_PACKS.
+  business_name:
+    type: str
+    default: ""
+    description: >-
+      The name that becomes the document's author in its properties. Left empty, the properties keep
+      no author rather than inventing one.
+  currency:
+    type: str
+    default: "$"
+    description: >-
+      The symbol used for `money` columns in the workbook and its preview. It is a display symbol
+      only; the amounts are the ones supplied or read from the store.

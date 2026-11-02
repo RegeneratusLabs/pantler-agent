@@ -47,7 +47,7 @@ def load_plugin():
 
 class RecordsPluginTestCase(unittest.TestCase):
     def setUp(self) -> None:
-        self._dir = tempfile.TemporaryDirectory()
+        self._dir = tempfile.TemporaryDirectory(ignore_cleanup_errors=True)
         self.dir = Path(self._dir.name)
         self.mod = load_plugin()
         self.ctx = PerKeyCtx(

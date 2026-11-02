@@ -93,7 +93,7 @@ def _bff_url() -> str:
     parsed = urlparse(text)
     if parsed.scheme not in ("http", "https") or not parsed.hostname:
         raise _ServiceError(
-            "plugins.entries.connectors.bff_url is not an http(s) address, so the connector "
+            "plugins.entries.connectors.settings.bff_url is not an http(s) address, so the connector "
             "service cannot be reached.",
             "bad_config",
         )
@@ -131,7 +131,7 @@ def _request(method: str, path: str, body: dict[str, Any] | None = None) -> dict
     except URLError as exc:
         raise _ServiceError(
             "The connector service is not running. Start the BFF, or check "
-            "plugins.entries.connectors.bff_url.",
+            "plugins.entries.connectors.settings.bff_url.",
             "unreachable",
         ) from exc
     except OSError as exc:

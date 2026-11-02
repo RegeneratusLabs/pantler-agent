@@ -149,7 +149,7 @@ def _book() -> SprayBook:
             return _STATE["book"]
         raise RuntimeError(
             "no spray book: set up your blocks and inputs in the app, or point "
-            "plugins.entries.spray.catalogue_path at a spray book JSON file"
+            "plugins.entries.spray.settings.catalogue_path at a spray book JSON file"
         )
     book = SprayBook.from_json_file(path)
     # The basename, not the path: this string reaches the transcript, and an absolute path there
