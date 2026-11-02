@@ -91,7 +91,7 @@ other's workspace, records or credentials.
 
 ### Install it on Windows
 
-Download **[`Pantler-Setup-0.0.4.exe`](https://github.com/RegeneratusLabs/pantler-agent/releases/latest)**
+Download **[the latest Windows installer](https://github.com/RegeneratusLabs/pantler-agent/releases/latest)**
 and run it. It installs for your user alone — no administrator prompt — and opens like any other
 Windows app.
 
